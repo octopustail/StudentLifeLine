@@ -1,8 +1,7 @@
 const mysql = require('../models/index');
-
 const DataProcesClain = require('../controllers/DataProcessChain.js');
-
 const config = require('./../configs/default');
+const kde = require('./../controllers/kernelDensityEstimation');
 
 const dataProcessFunc = function (req, res, next) {
 
@@ -15,7 +14,7 @@ const dataProcessFunc = function (req, res, next) {
         return Promise.resolve();
     };
 
-    queryProcessClain.addChain([queryVerify, generateSQL, queryInDatabase])
+    queryProcessClain.addChain([queryVerify, generateSQL, queryInDatabase,calKDE])
         .sendToClient(sendToClientHandler);
 };
 
@@ -38,7 +37,6 @@ const queryVerify = function (payload) {
  * @returns {string}
  */
 const generateSQL = function (payload) {
-
     let start = payload.currPage || config.page.currPage,
         end = payload.pageSize || config.page.pageSize,
         table = payload.table || config.sql.defaultTable,
@@ -46,9 +44,15 @@ const generateSQL = function (payload) {
 
     const sql = `select ${columns} from ${table} limit ${start},${end};`;
     console.log('generateSQL', sql);
+    console.log(sql);
     return Promise.resolve(sql)
 };
 
+/**
+ * This function will query the sql in the database;
+ * @param sql
+ * @returns {Promise.<TResult>}
+ */
 const queryInDatabase = function (sql) {
 
     /**
@@ -65,6 +69,14 @@ const queryInDatabase = function (sql) {
         Promise.reject(error);
         throw new Error(error);
     })
+};
+
+/**
+ * 计算 KDE 分布[（x1,y1）,(x2,y2)....]
+ * @param data a array with number
+ */
+const calKDE = function (data) {
+    return Promise.resolve(kde(data))
 };
 
 module.exports = dataProcessFunc;

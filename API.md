@@ -6,7 +6,7 @@
     简要描述：从Mysql中获得数据
     请求URL：localhost:3000/data
     请求方式：GET
-    例子： localhost:3000/data?table=meal_times&column=['student_id','meal_ae_1s']
+    例子： localhost:3000/data?table=meal_times&column=student_id,meal_ae_1s&pageSize=10000
     参数：
     
 | 参数名  | 是否必须 | 默认值 | 说明 | 例子 |

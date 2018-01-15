@@ -1,4 +1,3 @@
-const mysql = require('mysql');
 const mysqlClient = require('./mysql');
 const cleanData = require('./../controllers/cleandata');
 /**
@@ -15,9 +14,7 @@ module.exports = function (sql, res, rej) {
     });
 
     p.then((result)=>{
-
         result = cleanData(result);
-
         res(result)
     },(error)=>{
         rej(error);

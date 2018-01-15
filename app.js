@@ -9,7 +9,7 @@ var routes = require('./routes');
 var app = express();
 
 // view engine setup
-app.engine('html', require('ejs').renderFile);
+app.engine('html', require('./node_modules/_ejs@2.5.7@ejs').renderFile);
 app.set('view engine', 'html');
 
 // uncomment after placing your favicon in /public

@@ -18,7 +18,6 @@ module.exports = function (sql,resolve,reject) {
             reject(error);
             throw error;
         }
-        console.log(results);
         resolve(results);
     });
 };
