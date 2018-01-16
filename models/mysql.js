@@ -7,17 +7,17 @@ const config = require('../configs/default.js');
  * @param resolve
  * @param reject
  */
-module.exports = function (sql,resolve,reject) {
-    /**
-     * login in with default config;
-     */
-    const connection = mysql.createConnection(config.mysql);
-    connection.connect();
-    connection.query(sql, function (error, results, fields) {
-        if (error) {
-            reject(error);
-            throw error;
-        }
-        resolve(results);
-    });
+module.exports = function (sql, resolve, reject) {
+  /**
+   * login in with default config;
+   */
+  const connection = mysql.createConnection(config.mysql);
+  connection.connect();
+  connection.query(sql, function (error, results, fields) {
+    if (error) {
+      reject(error);
+      throw error;
+    }
+    resolve(results);
+  });
 };

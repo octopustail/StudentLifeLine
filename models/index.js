@@ -9,14 +9,14 @@ const cleanData = require('./../controllers/cleandata');
 module.exports = function (sql, res, rej) {
 
 
-    const p = new Promise((resolve,reject)=>{
+    const p = new Promise((resolve, reject) => {
         mysqlClient(sql, resolve, reject);
     });
 
-    p.then((result)=>{
+    p.then((result) => {
         result = cleanData(result);
-        res(result)
-    },(error)=>{
+        res(result);
+    }, (error) => {
         rej(error);
     })
 };
