@@ -24,8 +24,14 @@ module.exports = {
                 ]
             },
             {
-                test: /\.jsx?$/,
-                use: ['react-hot-loader/webpack'],
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['env','react']
+                    }
+                }
             }
         ]
     },
