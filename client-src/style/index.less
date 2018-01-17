@@ -1,0 +1,69 @@
+@import "./global.less";
+
+body {
+  height: 100% !important;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  width: @width;
+  height: @height;
+  background-color: @background-color;
+}
+
+header {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 50px;
+  .logo {
+    color:@title-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    font-size: 24px;
+    p {
+      height: 25px;
+    }
+  }
+  .header-column {
+    .border-radius;
+    background-color: @card-color;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    input {
+      color:@text-color;
+      margin-left: 20px;
+      vertical-align: middle;
+      background-color: @content-color;
+      width: 50%;
+    }
+  }
+}
+
+main {
+  position: relative;
+  margin: 10px;
+  height: 650px;
+}
+
+#entropy-distribution {
+  background-color: @card-color;
+  .border-radius;
+  width: 450px;
+  height: 280px;
+  position: absolute;
+  right: 0;
+}
+
+
+
+
+

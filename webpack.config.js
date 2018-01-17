@@ -20,7 +20,7 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     'style-loader',
-                    'css-loader',
+                    'css-loader'
                 ]
             },
             {
@@ -32,6 +32,39 @@ module.exports = {
                         presets: ['env']
                     }
                 }
+            },
+            {
+                test: /\.less$/,
+                use: [{
+                    loader: "style-loader" // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader" // translates CSS into CommonJS
+                }, {
+                    loader: "less-loader" // compiles Less to CSS
+                }]
+            },
+            {
+                test: /\.scss$/,
+                use: [{
+                    loader: "style-loader" // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader" // translates CSS into CommonJS
+                }, {
+                    loader: "sass-loader" // compiles Sass to CSS
+                }]
+            },
+            {
+                test: /\.eot/,
+                loader: 'file-loader?prefix=font/'
+            }, {
+                test: /\.woff/,
+                loader: 'file-loader?prefix=font/&limit=10000&mimetype=application/font-woff'
+            }, {
+                test: /\.ttf/,
+                loader: 'file-loader?prefix=font/'
+            }, {
+                test: /\.svg/,
+                loader: 'file-loader?prefix=font/'
             }
         ]
     },
