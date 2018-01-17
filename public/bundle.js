@@ -551,8 +551,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../_css-loader@0.28.8@css-loader/index.js!./normalize.css", function() {
-			var newContent = require("!!../_css-loader@0.28.8@css-loader/index.js!./normalize.css");
+		module.hot.accept("!!../_css-loader@0.28.8@css-loader/header.js!./normalize.css", function() {
+			var newContent = require("!!../_css-loader@0.28.8@css-loader/header.js!./normalize.css");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -691,8 +691,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/_css-loader@0.28.8@css-loader/index.js!./index.css", function() {
-			var newContent = require("!!../../node_modules/_css-loader@0.28.8@css-loader/index.js!./index.css");
+		module.hot.accept("!!../../node_modules/_css-loader@0.28.8@css-loader/header.js!./index.css", function() {
+			var newContent = require("!!../../node_modules/_css-loader@0.28.8@css-loader/header.js!./index.css");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
