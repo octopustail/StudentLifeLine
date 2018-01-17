@@ -3,7 +3,7 @@ import './style/global.less';
 
 import './style/index.less';
 
-import {init as entropyInit, reloadData as entropyReload} from './component/entropy_distribution/entropy_distribution'
+import {init as entropyInit, reloadData as entropyReload} from './component/entropy_distribution'
 
 /**
  * 项目的总开关，初始化其他的模块

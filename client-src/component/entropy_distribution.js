@@ -1,5 +1,5 @@
 import echarts from 'echarts'
-import config from './../../config';
+import config from '../config';
 
 const entropyDistributionInstance = echarts.init(document.getElementById('entropy-distribution'));
 let option;
