@@ -7,6 +7,9 @@ module.exports = function (app) {
     // app.use('/common', require('./common'));
     // app.use('/user', require('./user'));
 
+    app.get('/calendar',require('./calendar.js'));
+
+
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {
         const err = new Error('Not Found');

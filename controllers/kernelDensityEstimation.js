@@ -14,7 +14,7 @@ const kernelDensityEstinmation = function (data) {
     const xLeastLength = (xDomainMax - xDomainMin) / xDomainNumber;
     const result = [];
 
-    console.log(xDomainMin,xDomainMax,xLeastLength);
+    // console.log(xDomainMin,xDomainMax,xLeastLength);
     const kdfit = new KDE.KDEDist(KDE.Kernel.Gaussian, data);
 
     let x = xDomainMin,y;

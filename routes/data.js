@@ -8,7 +8,6 @@ const dataProcessFunc = function (req, res, next) {
     const queryProcessClain = new DataProcesClain(req.query);
 
     const sendToClientHandler = function (data) {
-        console.log('send',data);
         res.send(data);
         res.end();
         return Promise.resolve();
@@ -43,8 +42,8 @@ const generateSQL = function (payload) {
         columns = payload.column;
 
     const sql = `select ${columns} from ${table} limit ${start},${end};`;
-    console.log('generateSQL', sql);
-    console.log(sql);
+    // console.log('generateSQL', sql);
+    // console.log(sql);
     return Promise.resolve(sql)
 };
 

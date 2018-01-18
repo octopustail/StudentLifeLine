@@ -10,7 +10,6 @@ const cleanData = (data)=>{
 
     const keyName = keys[0];
     data.forEach((line)=>{
-        console.log(line);
         actualEntropyList.push(line[keyName]);
     });
     return actualEntropyList;
