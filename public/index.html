@@ -13,13 +13,52 @@
                 <input class="form-control input-sm" type="text" placeholder="Query With StudentId" id="inputSmall">
             </div>
         </header>
+        <div id='global-progress' class="progress progress-striped active">
+            <div class="progress-bar" style="width: 100%"></div>
+        </div>
         <main>
-            <div id="entropy-distribution">
-
+            <div id="calendar-count">
+                <ul class="nav nav-tabs">
+                    <li class="tab active"><a href="javascript:void(0);" data-toggle="tab" aria-expanded="false">Library</a></li>
+                    <li class="tab"><a href="javascript:void(0);" data-toggle="tab" aria-expanded="false">Hot Water</a></li>
+                    <li class="tab"><a href="javascript:void(0);" data-toggle="tab" aria-expanded="false">Food</a></li>
+                    <li class="tab"><a href="javascript:void(0);" data-toggle="tab" aria-expanded="true">Shower</a></li>
+                    <li class="dropdown active-forever">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">2009 1st<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="active" href="javascript:void(0);">2009 1st</a></li>
+                            <li><a href="javascript:void(0);">2009 2rd</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0);">2010 1st</a></li>
+                            <li><a href="javascript:void(0);">2010 2rd</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0);">2011 1st</a></li>
+                            <li><a href="javascript:void(0);">2011 2rd</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0);">2012 1st</a></li>
+                            <li><a href="javascript:void(0);">2012 2rd</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0);">2013 1st</a></li>
+                            <li><a href="javascript:void(0);">2013 2rd</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0);">2013 1st</a></li>
+                            <li><a href="javascript:void(0);">2013 2rd</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0);">2014 1st</a></li>
+                            <li><a href="javascript:void(0);">2014 2rd</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div id="calendar-view">
+                </div>
             </div>
+            <div id="entropy-distribution"></div>
         </main>
     </div>
 </div>
 <script src="bundle.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+
 </body>
 </html>

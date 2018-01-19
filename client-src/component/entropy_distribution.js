@@ -1,6 +1,7 @@
 import echarts from 'echarts'
 import config from '../config';
 
+import progressToggle from './progressHandler';
 const entropyDistributionInstance = echarts.init(document.getElementById('entropy-distribution'));
 let option;
 const loadingOption  = config.loading;
@@ -9,6 +10,7 @@ const loadingOption  = config.loading;
  * 模块初始化，显示 loading 效果，等待数据reload;
  */
 export function init() {
+    progressToggle('open');
     entropyDistributionInstance.showLoading(loadingOption);
 }
 
@@ -483,7 +485,7 @@ export function reloadData(data) {
         brush: {
             xAxisIndex: 'all',
             inBrush: {
-                color: '#5cc8e5'
+                color: config.defaultColor.highlightColor
             },
             outOfBrush: {
                 colorAlpha: 0
@@ -513,11 +515,18 @@ export function reloadData(data) {
                 },
                 barWidth: '100%',
             }
-        ]
+        ],
+        grid:{
+            left:'40',
+            top:'20',
+            bottom:'35',
+            right:'30'
+        }
     };
 
     entropyDistributionInstance.setOption(option);
     entropyDistributionInstance.hideLoading();
+    progressToggle('close');
 }
 
 /**

@@ -4,13 +4,21 @@ import './style/global.less';
 import './style/index.less';
 
 import {init as entropyInit, reloadData as entropyReload} from './component/entropy_distribution'
+import {init as calendarInit} from './component/calendar_view';
+import progressToggle from './component/progressHandler';
 
 /**
  * 项目的总开关，初始化其他的模块
  */
 function init() {
+
     entropyInit();
+    calendarInit();
     setTimeout(entropyReload, 5000);
+
+    setTimeout(()=>{
+        progressToggle('close');
+    },6000)
 }
 
 

@@ -2,7 +2,14 @@
 
 body {
   height: 100% !important;
+
 }
+.progress{
+  height:5px;
+  position:absolute;
+  width:100%;
+}
+
 
 .content {
   display: flex;
@@ -14,6 +21,7 @@ body {
   width: @width;
   height: @height;
   background-color: @background-color;
+  position: relative;
 }
 
 header {
@@ -54,14 +62,76 @@ main {
   height: 650px;
 }
 
+
+#calendar-count{
+  background-color: @card-color;
+  .border-radius;
+  width:460px;
+  height:240px;
+  position: absolute;
+  right: 0;
+  padding: 0 2px 0 2px;
+  li.active{
+    a{
+      color: #41d0ab;
+      background-color: #222222;
+      border: 1px solid #464545;
+      border-bottom-color: transparent;
+      cursor: default;
+    }
+  }
+
+  li.active-forever{
+    a{
+      color: #e0961f;
+      background-color: #222222;
+      border: 1px solid #464545;
+      border-bottom-color: transparent;
+      cursor: default;
+    }
+  }
+
+
+  .dropdown-menu{
+    li{
+      a{
+        color: #fff;
+      }
+      a.active{
+          color:#e0961f !important;
+      }
+
+    }
+
+    .divider{
+      height: 2px !important;
+      margin: 0 !important;
+      overflow: hidden;
+      background-color: #464545;
+    }
+  }
+
+  #calendar-view{
+    height:204px;
+    width: 456px;
+  }
+  .nav li a {
+    padding: 6px 15px !important;
+  }
+}
+
+
+
 #entropy-distribution {
   background-color: @card-color;
   .border-radius;
-  width: 450px;
-  height: 280px;
+  width: 460px;
+  height: 240px;
   position: absolute;
   right: 0;
+  top: 250px;
 }
+
 
 
 

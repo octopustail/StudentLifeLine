@@ -12,7 +12,11 @@ module.exports = {
     devServer: {
         contentBase: './public',
         port: 8080,
-        hot: true
+        hot: true,
+        proxy: {
+            "/calendar": "http://localhost:3000",
+            "/data":"http://localhost:3000"
+        }
     },
     module: {
         rules: [

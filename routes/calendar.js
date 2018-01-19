@@ -40,13 +40,13 @@ const queryByTerm = function (query) {
 /**
  * 根据选择的时间区间来返回数据
  * @param dateRange
- * @returns {Promise.<{fullKyes: Array, countObject: {food: Array, shower: Array, library: Array, hotwater: Array}}>}
+ * @returns {Promise.<{fullKeys: Array, countObject: {food: Array, shower: Array, library: Array, hotwater: Array}}>}
  */
 const dataProcess = function (dateRange) {
     //计算其中差距多少天
     const dateRangeCount = moment(dateRange.end).diff(moment(dateRange.start))/ 86400000;
 
-    const fullKyes = [];
+    const fullKeys = [];
     let dayCount;
 
 
@@ -66,7 +66,7 @@ const dataProcess = function (dateRange) {
     for (let i = 0; i < dateRangeCount; i++) {
         day = day.format('YYYY-MM-DD');
 
-        fullKyes.push(day);
+        fullKeys.push(day);
 
         dayCount = dailyCount[day];
         if (dayCount != null) {
@@ -90,7 +90,7 @@ const dataProcess = function (dateRange) {
     }
 
     return Promise.resolve({
-        fullKyes,
+        fullKeys,
         countObject
     })
 

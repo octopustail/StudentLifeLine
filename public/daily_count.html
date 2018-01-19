@@ -13,7 +13,7 @@
 
 
     $.ajax({
-        url: "http://localhost:3000/calendar",
+        url: "/calendar",
     }).done(function (data) {
         console.log(data);
         instance.setOption(
@@ -46,7 +46,7 @@
                     {
                         type: 'category',
                         boundaryGap: false,
-                        data: data.fullKyes
+                        data: data.fullKeys
                     }
                 ],
                 yAxis: [
