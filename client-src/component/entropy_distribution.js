@@ -3,12 +3,7 @@ import config from '../config';
 
 const entropyDistributionInstance = echarts.init(document.getElementById('entropy-distribution'));
 let option;
-const loadingOption  = {
-    text: 'loading',
-    textColor: config.defaultColor.textColor,
-    maskColor: 'rgba(47,57,77,1)',
-    zlevel: 0
-};
+const loadingOption  = config.loading;
 
 /**
  * 模块初始化，显示 loading 效果，等待数据reload;

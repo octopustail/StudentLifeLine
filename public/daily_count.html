@@ -6,8 +6,8 @@
 </head>
 <body>
 <div id="main" style="width:1500px;height:500px"></div>
-<script src="./echarts.js"></script>
-<script src="./jquery.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.0.0/echarts.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
 <script>
     const instance = echarts.init(document.getElementById('main'));
 
@@ -15,7 +15,7 @@
     $.ajax({
         url: "http://localhost:3000/calendar",
     }).done(function (data) {
-        console.log(data)
+        console.log(data);
         instance.setOption(
             {
                 grid: {

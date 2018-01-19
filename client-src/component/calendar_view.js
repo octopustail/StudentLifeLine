@@ -7,5 +7,4 @@
 //http://www.teach.ustc.edu.cn/calendar/3085.html
 //http://gallery.echartsjs.com/editor.html?c=calendar-effectScatter
 
-import echarts from 'echarts'
 
