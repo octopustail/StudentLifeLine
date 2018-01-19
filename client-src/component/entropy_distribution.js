@@ -498,7 +498,7 @@ export function reloadData(data) {
                 symbol: 'none',
                 lineStyle: {
                     normal: {
-                        color: '#5cc8e5'
+                        color: config.defaultColor.highlightColor
                     }
                 },
                 smooth: true,

@@ -1,10 +1,10 @@
 export default {
     defaultColor:{
-        backgroundColor:'#242e3a',
-        cardColor:'#2f394d',
-        contentColor:'#242e3a',
+        backgroundColor:'#23262b',
+        cardColor:'#2f343a',
+        contentColor:'#15191c',
         textColor:'#747379',
-        highlightColor:'#5cc8e5'
+        highlightColor:'#4ccb61'
     },
     /**
      * Echarts 的 loading 配置项
@@ -12,7 +12,7 @@ export default {
     loading: {
         text: 'loading',
         textColor: '#747379',
-        maskColor: 'rgba(47,57,77,1)',
+        maskColor: '#2f343a',
         zlevel: 0
     },
 }
