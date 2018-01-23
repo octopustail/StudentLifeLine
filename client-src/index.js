@@ -3,8 +3,11 @@ import './style/global.less';
 
 import './style/index.less';
 
-import {init as entropyInit, reloadData as entropyReload} from './component/entropy_distribution'
-import {init as calendarInit} from './component/calendar_view';
+import {init as entropyInit, reloadData as entropyReload} from './component/entropyDistribution'
+import {init as calendarInit} from './component/calendarView';
+import {init as dailyEntropyViewInit, reloadData as dailyEntropyViewReloadData} from './component/dailyEntropyView';
+
+
 import progressToggle from './component/progressHandler';
 
 /**
@@ -12,6 +15,7 @@ import progressToggle from './component/progressHandler';
  */
 function init() {
 
+    dailyEntropyViewInit();
     entropyInit();
     calendarInit();
 

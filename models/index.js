@@ -7,7 +7,6 @@ const mysqlClient = require('./mysql');
  */
 module.exports = function (sql, res, rej) {
 
-
     const p = new Promise((resolve, reject) => {
         mysqlClient(sql, resolve, reject);
     });

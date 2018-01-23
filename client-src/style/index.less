@@ -10,7 +10,6 @@ body {
   width:100%;
 }
 
-
 .content {
   display: flex;
   justify-content: center;
@@ -19,6 +18,8 @@ body {
 
 .wrapper {
   width: @width;
+  min-width:@width;
+  max-width:@width;
   height: @height;
   background-color: @background-color;
   position: relative;
@@ -61,7 +62,6 @@ main {
   margin: 10px;
   height: 650px;
 }
-
 
 #calendar-count{
   .box-shadow;
@@ -126,9 +126,18 @@ main {
     font-size:10px;
     margin: 2px 0 0 10px;
   }
+
 }
+#daily-entropy-view{
+  .box-shadow;
+  background-color: @card-color;
+  .border-radius;
 
-
+  width: 780px;;
+  height: 492px;
+  position: absolute;
+  left:10px;
+}
 
 #entropy-distribution {
   .box-shadow;

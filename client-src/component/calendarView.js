@@ -283,6 +283,7 @@ const calendarSearchBtnClickBind = function () {
         let selectedDate = model.selectedDate;
         if (selectedDate.length === 0) return null;
 
+        progressToggle('open');
         selectedDate = selectedDate.map((val)=>{
             return val.split(',')[0];
         }).join(',');
@@ -290,7 +291,10 @@ const calendarSearchBtnClickBind = function () {
         $.ajax({
             url:`/calendarday?dates=${selectedDate}`
         }).done(function (data) {
+
             console.log(data);
+            progressToggle('close');
+
         });
         console.log(selectedDate);
 
