@@ -1,7 +1,7 @@
-const mysql = require('../models/index');
 const DataProcesClain = require('../controllers/DataProcessChain.js');
 const config = require('./../configs/default');
 const kde = require('./../controllers/kernelDensityEstimation');
+const queryInDatabase = require('./../controllers/queryInDatabase');
 
 const dataProcessFunc = function (req, res, next) {
 
@@ -13,7 +13,7 @@ const dataProcessFunc = function (req, res, next) {
         return Promise.resolve();
     };
 
-    queryProcessClain.addChain([queryVerify, generateSQL, queryInDatabase,calKDE])
+    queryProcessClain.addChain([queryVerify, generateSQL, queryInDatabase,cleanData,calKDE])
         .sendToClient(sendToClientHandler);
 };
 
@@ -42,33 +42,28 @@ const generateSQL = function (payload) {
         columns = payload.column;
 
     const sql = `select ${columns} from ${table} limit ${start},${end};`;
-    // console.log('generateSQL', sql);
-    // console.log(sql);
+
     return Promise.resolve(sql)
 };
 
 /**
- * This function will query the sql in the database;
- * @param sql
- * @returns {Promise.<TResult>}
+ * To transform the Array into other version;
+ * @param data
  */
-const queryInDatabase = function (sql) {
+const cleanData = (data)=>{
+    const actualEntropyList = [];
+    const keys = Object.keys(data[0]);
+    const studentIdIndex = keys.indexOf('student_id');
+    keys.splice(studentIdIndex,1);
 
-    /**
-     * 这里来处理 mysql 逻辑
-     * @type {Promise}
-     */
-    const p = new Promise(function (resolve, reject) {
-        mysql(sql, resolve, reject)
+    const keyName = keys[0];
+    data.forEach((line)=>{
+        actualEntropyList.push(line[keyName]);
     });
-
-    return p.then(function (data) {
-        return Promise.resolve(data)
-    },function (error) {
-        Promise.reject(error);
-        throw new Error(error);
-    })
+    return actualEntropyList;
 };
+
+
 
 /**
  * 计算 KDE 分布[（x1,y1）,(x2,y2)....]

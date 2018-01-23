@@ -14,7 +14,6 @@ function init() {
 
     entropyInit();
     calendarInit();
-    setTimeout(entropyReload, 5000);
 
     setTimeout(()=>{
         progressToggle('close');

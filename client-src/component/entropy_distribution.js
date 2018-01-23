@@ -1,10 +1,13 @@
 import echarts from 'echarts'
 import config from '../config';
+import $ from 'jquery';
 
 import progressToggle from './progressHandler';
+
+
 const entropyDistributionInstance = echarts.init(document.getElementById('entropy-distribution'));
 let option;
-const loadingOption  = config.loading;
+const loadingOption = config.loading;
 
 /**
  * 模块初始化，显示 loading 效果，等待数据reload;
@@ -12,6 +15,7 @@ const loadingOption  = config.loading;
 export function init() {
     progressToggle('open');
     entropyDistributionInstance.showLoading(loadingOption);
+    reloadData();
 }
 
 /**
@@ -516,11 +520,11 @@ export function reloadData(data) {
                 barWidth: '100%',
             }
         ],
-        grid:{
-            left:'40',
-            top:'20',
-            bottom:'35',
-            right:'30'
+        grid: {
+            left: '40',
+            top: '20',
+            bottom: '35',
+            right: '30'
         }
     };
 
@@ -542,7 +546,15 @@ export function updateData(data) {
 /**
  * 根据选择的数据去 fetch 新的数据;
  */
-function queryData() {
+function queryData(year,term) {
+    $.ajax({
+        url: `/data`,
+    }).done(function (data) {
+
+
+
+    })
+
 
 }
 

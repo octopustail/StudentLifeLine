@@ -15,11 +15,15 @@ import config from './../config'
  * 用来记录数据的一个缓冲，如果已经缓冲了，就不用再去访问服务器了
  * @type {{shower: {}, food: {}, library: {}, hotwater: {}}}
  */
-const model = {};
+const model = {
+    "selectedDate": []
+};
 
 export function init() {
     progressToggle('open');
     ulClickBind();
+    calendarClickBind();
+    calendarSearchBtnClickBind();
     dropdownMenuClickBind();
     queryServerWithTerm();
     progressToggle('close');
@@ -30,7 +34,8 @@ export function init() {
  * 保持跟踪着高亮的选项
  * @type {string}
  */
-let activeTab='library',activeTerm='2009-1';
+let activeTab = 'library', activeTerm = '2009-1';
+const calendarViewInstance = echarts.init(document.getElementById('calendar-view'));
 
 /**
  * 根据 ul 的点击绑定事件
@@ -44,18 +49,18 @@ const ulClickBind = function () {
      */
     const uiChangeBinding = function (element) {
         //做这个 length 判断是为了判断是否点击到了 li 元素上面；后面的判断是为了让点击 li 的时候不会影响到 dropdown的样式；
-        if (['Library','Hot Water', 'Food', 'Shower'].indexOf(element.target.innerText) !== -1) {
+        if (['Library', 'Hot Water', 'Food', 'Shower'].indexOf(element.target.innerText) !== -1) {
 
             $ulElement.find('.tab.active').removeClass('active');
             $(element.target.parentNode).addClass('active');
             activeTab = element.target.innerText.split(' ').join('').toLowerCase();
 
             progressToggle('open');
-            calendarView(activeTab,activeTerm);
+            calendarView();
         }
 
         //判断下拉框的点击事件
-        if($(element.target)[0].className === 'dropdown-toggle'){
+        if ($(element.target)[0].className === 'dropdown-toggle') {
             $ulElement.find('.dropdown-menu').toggle('normal');
         }
 
@@ -82,11 +87,11 @@ const dropdownMenuClickBind = function () {
         $dropdownMenu.toggle('normal');
 
         progressToggle('open');
-        if(needChatWithServer()){
+        if (needChatWithServer()) {
             // 如果需要从服务器获取数据，先打开 progress 等待；
             queryServerWithTerm();
-        }else{
-            calendarView(activeTab,activeTerm);
+        } else {
+            calendarView(activeTab, activeTerm);
         }
     });
 
@@ -100,51 +105,56 @@ const needChatWithServer = function () {
     return model[activeTerm] == null
 };
 
-
 /**
  * 根据选的 term 查询数据库
  * @param activeTerm
  */
 const queryServerWithTerm = function () {
-    debugger
     const year = activeTerm.split('-')[0];
     const term = activeTerm.split('-')[1];
     $.ajax({
         url: `/calendar?year=${year}&term=${term}`,
     }).done(function (data) {
         model[activeTerm] = data;
-        calendarView(activeTab,activeTerm);
+        calendarView(activeTab, activeTerm);
     })
 };
 
-const calendarView = function (activeTab,activeTerm) {
-    const calendarViewInstance = echarts.init(document.getElementById('calendar-view'));
-    debugger;
+/**
+ * 在切换的时候,把上次选中的selectedDate清空
+ */
+const clearChosenData = function () {
+    model.selectedDate = [];
+};
+
+const calendarView = function () {
     const fullKeys = model[activeTerm]['fullKeys'];
     const locationArray = model[activeTerm]['countObject'][activeTab];
     const data = [];
     const max = Math.max(...locationArray);
 
-    fullKeys.forEach(function(value,index){
-        data.push([value,locationArray[index]]);
+    fullKeys.forEach(function (value, index) {
+        data.push([value, locationArray[index]]);
     });
+
+    clearChosenData();
 
     const option = {
         backgroundColor: config.defaultColor.cardColor,
-        tooltip : {
+        tooltip: {
             trigger: 'item'
         },
-        borderColor:config.defaultColor.contentColor,
-        borderWidth:0,
-        textStyle:{
-            color:config.defaultColor.textColor
+        borderColor: config.defaultColor.contentColor,
+        borderWidth: 0,
+        textStyle: {
+            color: config.defaultColor.textColor
         },
 
         calendar: [{
-            width:440,
+            width: 440,
             top: 30,
             left: 'center',
-            range: [fullKeys[0], fullKeys[fullKeys.length-1]],
+            range: [fullKeys[0], fullKeys[fullKeys.length - 1]],
             splitLine: {
                 show: true,
                 lineStyle: {
@@ -162,13 +172,14 @@ const calendarView = function (activeTab,activeTerm) {
             }
         }],
         visualMap: {
-            inRange:{
+            inRange: {
                 color: [config.defaultColor.backgroundColor, config.defaultColor.highlightColor],
             },
-            calculable:true,
-            itemWidth:10,
-            itemHeight:150,
-            align:'left',
+            seriesIndex: [0],
+            calculable: true,
+            itemWidth: 10,
+            itemHeight: 150,
+            align: 'left',
             min: 0,
             max: max,
             orient: 'horizontal',
@@ -178,7 +189,7 @@ const calendarView = function (activeTab,activeTerm) {
                 color: config.defaultColor.textColor
             }
         },
-        series : [
+        series: [
             {
                 name: activeTab,
                 type: 'heatmap',
@@ -190,42 +201,98 @@ const calendarView = function (activeTab,activeTerm) {
                     }
                 }
             },
-            // {
-            //     name: 'Top 12',
-            //     type: 'effectScatter',
-            //     coordinateSystem: 'calendar',
-            //     calendarIndex: 1,
-            //     data: data.sort(function (a, b) {
-            //         return b[1] - a[1];
-            //     }).slice(0, 12),
-            //     symbolSize: function (val) {
-            //         return val[1] / 500;
-            //     },
-            //     showEffectOn: 'render',
-            //     rippleEffect: {
-            //         brushType: 'stroke'
-            //     },
-            //     hoverAnimation: true,
-            //     itemStyle: {
-            //         normal: {
-            //             color: '#f4e925',
-            //             shadowBlur: 10,
-            //             shadowColor: '#333'
-            //         }
-            //     },
-            //     zlevel: 1
-            // },
+            {
+                name: 'selected date',
+                type: 'heatmap',
+                coordinateSystem: 'calendar',
+                data: model.selectedDate,
+                itemStyle: {
+                    normal: {
+                        color: '#2db9ff',
+                        shadowColor: 'rgba(0, 0, 0, 0.7)',
+                        shadowBlur: 20,
+                        shadowOffsetX: 5,
+                        shadowOffsetY: 5,
+                        opacity: 0.5
+
+                    }
+                },
+                zlevel: 2
+            },
+
+            {
+                name: 'Selected',
+                type: 'effectScatter',
+                coordinateSystem: 'calendar',
+                data: data.sort((a, b) => {
+                    return b[1] - a[1];
+                }).slice(1, 10),
+                showEffectOn: 'render',
+                rippleEffect: {
+                    brushType: 'fill',
+                    scale: 4
+                },
+                hoverAnimation: true,
+                itemStyle: {
+                    normal: {
+                        color: config.defaultColor.highlightColor,
+                        shadowBlur: 10,
+                        shadowColor: '#333'
+                    }
+                },
+                zlevel: 1
+            }
 
         ]
     };
 
     calendarViewInstance.setOption(option);
 
-    calendarViewInstance.on('click',function (element) {
-        console.log(element);
-    });
-
     progressToggle('close');
-
 };
 
+const calendarClickBind = function () {
+    calendarViewInstance.on('click', function (element) {
+        const selectDate = element.data.toString();
+
+        const selectModel = model['selectedDate'];
+        const selectDateIndex = selectModel.indexOf(selectDate);
+
+        if (selectDateIndex === -1) {
+            //说明这个数据是没有重复的
+            selectModel.push(selectDate);
+        } else {
+            selectModel.splice(selectDateIndex, 1);
+        }
+
+        calendarViewInstance.setOption({
+            series: [{
+                name: 'selected date',
+                data: model.selectedDate.map((val) => {
+                    return val.split(',')
+                }),
+            }]
+        });
+    });
+};
+
+const calendarSearchBtnClickBind = function () {
+    const calendarBtn = $('#calendar-search');
+
+    calendarBtn.click(function () {
+        let selectedDate = model.selectedDate;
+        if (selectedDate.length === 0) return null;
+
+        selectedDate = selectedDate.map((val)=>{
+            return val.split(',')[0];
+        }).join(',');
+
+        $.ajax({
+            url:`/calendarday?dates=${selectedDate}`
+        }).done(function (data) {
+            console.log(data);
+        });
+        console.log(selectedDate);
+
+    })
+};

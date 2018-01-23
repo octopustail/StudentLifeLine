@@ -1,5 +1,4 @@
 const mysqlClient = require('./mysql');
-const cleanData = require('./../controllers/cleandata');
 /**
  * 传入sql语句，返回数据
  * @param sql
@@ -14,7 +13,6 @@ module.exports = function (sql, res, rej) {
     });
 
     p.then((result) => {
-        result = cleanData(result);
         res(result);
     }, (error) => {
         rej(error);

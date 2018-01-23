@@ -8,7 +8,7 @@ module.exports = function (app) {
     // app.use('/user', require('./user'));
 
     app.get('/calendar',require('./calendar.js'));
-
+    app.get('/calendarday',require('./calendarDay.js'))
 
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {
