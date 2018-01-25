@@ -426,6 +426,7 @@ export function reloadData(data) {
         ]
     ];
 
+
     const xAxis = data.map(function (element) {
         return element[0];
     });
@@ -453,29 +454,6 @@ export function reloadData(data) {
                 }
             }
         },
-        // visualMap: {
-        //     show: false,
-        //     dimension: 0,
-        //     pieces: [{
-        //         lte: 6,
-        //         color: 'red'
-        //     }, {
-        //         gt: 6,
-        //         lte: 8,
-        //         color: 'red'
-        //     }, {
-        //         gt: 8,
-        //         lte: 14,
-        //         color: 'red'
-        //     }, {
-        //         gt: 14,
-        //         lte: 17,
-        //         color: 'red'
-        //     }, {
-        //         gt: 17,
-        //         color: 'red'
-        //     }]
-        // },
         toolbox: {
             feature: {
                 dataZoom: {

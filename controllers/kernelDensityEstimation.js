@@ -5,26 +5,22 @@ var distfit = require("distfitjs/lib/distfit");
  * @param data Input data should be array;
  */
 const kernelDensityEstinmation = function (data) {
-    // console.log(data);
-    // data = [1,2,3,4,5,6,7];
     const KDE = distfit.KDE;
     const xDomainMin = Math.min(...data);
     const xDomainMax = Math.max(...data);
-    const xDomainNumber = 100;
-    const xLeastLength = (xDomainMax - xDomainMin) / xDomainNumber;
-    const result = [];
 
-    // console.log(xDomainMin,xDomainMax,xLeastLength);
+    const result = {};
+
     const kdfit = new KDE.KDEDist(KDE.Kernel.Gaussian, data);
 
     let x = xDomainMin,y;
 
-    for(let i = 0; i< xDomainNumber; i++){
-        x +=  xLeastLength;
+    for(let i = xDomainMin; i<= xDomainMax; i++){
         y = kdfit.pdf(x);
-
-        result.push([x,y]);
+        result[x]=y;
+        x += 1;
     }
+
     return result;
 };
 

@@ -11,6 +11,8 @@ import echarts from 'echarts';
 import progressToggle from './progressHandler';
 import config from './../config'
 
+import {reloadData} from './dailyEntropyView';
+
 /**
  * 用来记录数据的一个缓冲，如果已经缓冲了，就不用再去访问服务器了
  * @type {{shower: {}, food: {}, library: {}, hotwater: {}}}
@@ -292,11 +294,9 @@ const calendarSearchBtnClickBind = function () {
             url:`/calendarday?dates=${selectedDate}`
         }).done(function (data) {
 
-            console.log(data);
+            reloadData(data);
             progressToggle('close');
-
         });
-        console.log(selectedDate);
 
     })
 };
