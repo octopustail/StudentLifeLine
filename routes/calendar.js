@@ -9,11 +9,13 @@ const dailyCount = require('./../models/dailyCount.json');
 const calendarDataProcess = function (req, res, next) {
     const queryProcessClain = new DataProcesClain(req.query);
 
+
     const sendToClientHandler = function (data) {
         res.send(data);
         res.end();
         return Promise.resolve();
     };
+
 
     queryProcessClain.addChain([queryByTerm,dataProcess])
         .sendToClient(sendToClientHandler);

@@ -3,6 +3,7 @@ const config = require('./../configs/default');
 const kde = require('./../controllers/kernelDensityEstimation');
 const queryInDatabase = require('./../controllers/queryInDatabase');
 
+
 const dataProcessFunc = function (req, res, next) {
 
     const queryProcessClain = new DataProcesClain(req.query);

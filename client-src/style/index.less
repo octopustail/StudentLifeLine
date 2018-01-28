@@ -1,5 +1,6 @@
 @import "./global.less";
 
+
 body {
   height: 100% !important;
 
@@ -60,7 +61,6 @@ header {
 main {
   position: relative;
   margin: 10px;
-  height: 650px;
 }
 
 #calendar-count{
@@ -69,8 +69,9 @@ main {
   .border-radius;
   width:460px;
   height:240px;
+  right:0;
+  top:0;
   position: absolute;
-  right: 0;
   padding: 0 2px 0 2px;
   li.active{
     a{
@@ -132,11 +133,8 @@ main {
   .box-shadow;
   background-color: @card-color;
   .border-radius;
-
   width: 780px;;
   height: 492px;
-  position: absolute;
-  left:10px;
 }
 
 #entropy-distribution {
@@ -155,5 +153,30 @@ main {
   color:@text-color;
 }
 
+#parcoord-gap{
+  background-color:@card-color;
+  .border-radius;
+  margin-top:10px;
+  g.tick text,line{
+    fill:@text-color;
+    opacity:0.2;
+    font-size:8px;
+  }
+
+  g.axis text{
+    fill:@text-color;
+    opacity:0.3;
+    font-size:12px;
+  }
+
+  .dimension{
+    path.domain{
+      stroke:@text-color !important;
+      opacity:0.3;
+
+    }
+  }
+
+}
 
 

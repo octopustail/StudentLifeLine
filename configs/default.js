@@ -9,8 +9,8 @@ const config = {
     mysql: {
         host: 'localhost',
         user: 'root',
-        // password: 'vis',
-        password: 'visvisvis',//我的笔记本中的数据库密码是这个
+        password: 'vis',
+        // password: 'visvisvis',//我的笔记本中的数据库密码是这个
         database: 'StudentsCardData'
     },
     env: "dev",//当前环境

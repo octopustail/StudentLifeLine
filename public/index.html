@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>StudentCircle</title>
+    <link rel="stylesheet" href="./script/d3.parcoords.css">
 </head>
 <body>
 <div class="content">
@@ -58,11 +59,22 @@
                 <button type="button" class="btn btn-success btn-sm" id="calendar-search">Search</button>
             </div>
             <div id="entropy-distribution"></div>
+            <div id="parcoord-gap" class="parcoords" style="width:600px;height:250px;position:relative"></div>
+
+            <div id="parcoord-info" class="parcoords"></div>
         </main>
     </div>
 </div>
+
+<!--为了引入parcoords这个老版本的库,必须要通过这种形式来-->
+<script src="./script/d3.js"></script>
+<script src="script/sylvester.src.js"></script>
+<script src="script/d3.parcoords.js"></script>
+<script src="script/parcoords-gap.js"></script>
+
+<!--以下是webpack引入的内容-->
 <script src="bundle.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<!--<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>-->
 
 </body>
 </html>

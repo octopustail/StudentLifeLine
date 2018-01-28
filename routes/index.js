@@ -3,12 +3,14 @@
  * @param app
  */
 module.exports = function (app) {
-    app.get('/data',require('./data.js'));
-    // app.use('/common', require('./common'));
-    // app.use('/user', require('./user'));
 
     app.get('/calendar',require('./calendar.js'));
-    app.get('/calendarday',require('./calendarDay.js'))
+
+    app.get('/data',require('./data.js'));
+
+    app.get('/calendarday',require('./calendarDay.js'));
+
+    app.get('/parallelgap',require('./parallelgap.js'));
 
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {
