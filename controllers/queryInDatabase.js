@@ -14,7 +14,6 @@ const queryInDatabase = function (sql) {
         mysql(sql, resolve, reject)
     });
 
-    console.log(sql);
     return p.then(function (data) {
         return Promise.resolve(data)
     },function (error) {

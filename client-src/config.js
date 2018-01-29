@@ -4,7 +4,8 @@ export default {
         cardColor:'#2f343a',
         contentColor:'#15191c',
         textColor:'#747379',
-        highlightColor:'#4ccb61'
+        highlightColor:'#4ccb61',
+        highlightSecondColor:'#4eace5'
     },
     /**
      * Echarts 的 loading 配置项
