@@ -84,7 +84,6 @@ const cleanPreviousChart = function(callback){
     const $entropyCircle = $('.entropyCircle');
     if($entropyCircle.length){
         $entropyCircle.toggle(function(){
-            debugger;
 
             $entropyCircle.remove();
             callback();

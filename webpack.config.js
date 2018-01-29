@@ -69,6 +69,13 @@ module.exports = {
             }, {
                 test: /\.svg/,
                 loader: 'file-loader?prefix=font/'
+            },
+            {
+                test: require.resolve('jquery'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: '$'
+                }]
             }
         ]
     },

@@ -63,7 +63,6 @@ const transformDataForEcharts = function (data) {
 export function reloadData() {
 
     const {xAxisForMeal, yAxisForMeal, xAxisForShower, yAxisForShower} = transformDataForEcharts(entropyKDE);
-    debugger;
 
     option = {
         backgroundColor: config.defaultColor.cardColor,

@@ -115,7 +115,6 @@ const processDataFromDatabase = function (data, stun) {
         // }
         type = value.type;
         time = value.time.split(':').slice(0, 2).join('');
-        debugger;
         stun[type]['minuteMapDict'][time].push(value);
     });
 

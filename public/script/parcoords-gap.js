@@ -1,6 +1,10 @@
-var init = function(){
+let data = null;
+let previousSelectedStudentsIdString = '';
 
-    var data = [
+
+var init = function () {
+
+    data = [
         {
             "student_id": "2010001010003",
             "score_1s": 73,
@@ -903,34 +907,34 @@ var init = function(){
         }
     ]
 
-    var pc = d3.parcoords()("#parcoord-gap");
+    const pc = d3.parcoords()("#parcoord-gap");
 
-    var range =pc.height() - pc.margin().top - pc.margin().bottom;
+    const range = pc.height() - pc.margin().top - pc.margin().bottom;
 
-    var log = d3.scale.linear()
+    const log = d3.scale.linear()
         .domain([0, 100])
-        .range([range,1]);
+        .range([range, 1]);
 
-    var dimensions = {
-        score_1s:{
-            yscale: log
-        },
-        score_2s:{
-            yscale: log
-        },
-        score_3s:{
-            yscale: log
-        },
-        score_4s:{
-            yscale: log
-        },
-        score_5s:{
-            yscale: log
-        },
-        score_6s:{
-            yscale: log
-        }
-    };
+    // const dimensions = {
+    //     score_1s: {
+    //         yscale: log
+    //     },
+    //     score_2s: {
+    //         yscale: log
+    //     },
+    //     score_3s: {
+    //         yscale: log
+    //     },
+    //     score_4s: {
+    //         yscale: log
+    //     },
+    //     score_5s: {
+    //         yscale: log
+    //     },
+    //     score_6s: {
+    //         yscale: log
+    //     }
+    // };
 
 
     pc.data(data)
@@ -949,19 +953,45 @@ var init = function(){
         .reorderable()
         .interactive();
 
-    pc.on('brush',function(d){
+    pc.on('brush', function (d) {
+
+        // 如果是全部的数据,那么就不变,如果是空也不变;
+        if (d.length === data.length || d.length === 0) {
+            return null;
+        }
+        // 如果数据没有发生改变, 也不用发生任何改变;
+        if(!isSelectedStudentIdChanged(d)){
+            return null;
+        }
         console.log(d);
+
     });
 };
 
 
-var reloadData = function(data){
+const isSelectedStudentIdChanged = function(d){
+    let selectedStudentsIdString = d.map(function(studentObj){
+        return studentObj.student_id;
+    });
+
+    selectedStudentsIdString = selectedStudentsIdString.sort(function(a,b){
+        return parseInt(a) -parseInt(b)
+    }).toString();
+
+    const result =  selectedStudentsIdString !== previousSelectedStudentsIdString;
+    previousSelectedStudentsIdString = selectedStudentsIdString;
+
+    return result;
+};
+
+
+const reloadData = function (data) {
 
 
 };
 
 window.parcoods = {
-    parcoodsGap:{
+    parcoodsGap: {
         init,
         reloadData
     }
