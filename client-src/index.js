@@ -8,7 +8,6 @@ import {init as dailyEntropyViewInit, reloadData as dailyEntropyViewReloadData} 
 
 import progressToggle from './component/progressHandler';
 
-const parcoodsGap = window.parcoods.parcoodsGap;
 
 /**
  * 项目的总开关，初始化其他的模块
@@ -18,7 +17,6 @@ function init() {
     dailyEntropyViewInit();
     entropyInit();
     calendarInit();
-    parcoodsGap.init();
 
     setTimeout(()=>{
         progressToggle('close');

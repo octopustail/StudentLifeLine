@@ -104,7 +104,7 @@ const theta = function(r,index,array){
     return index/1440 * 2 * Math.PI
 };
 
-module.exports = {
+export  {
     init,
     reloadData
 };

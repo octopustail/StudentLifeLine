@@ -11,7 +11,9 @@ import echarts from 'echarts';
 import progressToggle from './progressHandler';
 import config from './../config'
 
-import {reloadData} from './dailyEntropyView';
+import {reloadData as dailyEntropyViewReloadData} from './dailyEntropyView';
+const parcoods = window.parcoods;
+
 
 /**
  * 用来记录数据的一个缓冲，如果已经缓冲了，就不用再去访问服务器了
@@ -285,18 +287,43 @@ const calendarSearchBtnClickBind = function () {
         let selectedDate = model.selectedDate;
         if (selectedDate.length === 0) return null;
 
-        progressToggle('open');
-        selectedDate = selectedDate.map((val)=>{
+        selectedDate = selectedDate.map((val) => {
             return val.split(',')[0];
         }).join(',');
 
+        progressToggle('open');
         $.ajax({
-            url:`/calendarday?dates=${selectedDate}`
+            url: `/calendarday?dates=${selectedDate}`
         }).done(function (data) {
-
-            reloadData(data);
+            dailyEntropyViewReloadData(data);
             progressToggle('close');
         });
+
+        //开了2个ajax所以有2个缓存进度;
+        progressToggle('open');
+        progressToggle('open');
+        $.ajax({
+            url: `/calendardayfordistinctstudentid?dates=${selectedDate}&location=${activeTab}`
+        }).done(function (data) {
+            // 这是选中的天数的学生列表合集;
+            const distinctStudentId = data.toString();
+
+            $.ajax({
+                url:`/parallelgap?studentid=${distinctStudentId}`
+            }).done(function(data){
+                parcoods.parcoodsGap.init(data);
+                progressToggle('close');
+            });
+
+            $.ajax({
+                url:`/entropybystudents?studentId=${distinctStudentId}`
+            }).done(function(data){
+                parcoods.parcoodsEntropy.init(data.meal);
+                progressToggle('close');
+            });
+
+        });
+
 
     })
 };

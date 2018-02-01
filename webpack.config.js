@@ -15,7 +15,13 @@ module.exports = {
         hot: true,
         proxy: {
             "/calendar": "http://localhost:3000",
-            "/data":"http://localhost:3000"
+            "/data": "http://localhost:3000",
+            "/entropybystudents": "http://localhost:3000",
+            "/calendarday": "http://localhost:3000",
+            "/parallelgap": "http://localhost:3000",
+            "/entropydistribution": "http://localhost:3000",
+            "/calendardayforentropy": "http://localhost:3000",
+            "/calendardayfordistinctstudentid": "http://localhost:3000"
         }
     },
     module: {

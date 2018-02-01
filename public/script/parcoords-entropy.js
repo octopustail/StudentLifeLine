@@ -1,57 +1,33 @@
-(function(window){
-    let data = null;
+(function (window) {
+
+    if (window['parcoods'] == null) {
+        window['parcoods'] = {};
+    }
+
     let previousSelectedStudentsIdString = '';
     let setTimeoutId = null;
 
-
     const init = function (data) {
-
         clearDom();
-        const pc = d3.parcoords()("#parcoord-gap");
 
+        const pc = d3.parcoords()("#parcoord-entropy");
         storeDataInWindow(data);
         storeParcoordsInstanceInWindows(pc);
-        // const range = pc.height() - pc.margin().top - pc.margin().bottom;
-        // const log = d3.scale.linear()
-        //     .domain([0, 100])
-        //     .range([range, 1]);
-        // const dimensions = {
-        //     score_1s: {
-        //         yscale: log
-        //     },
-        //     score_2s: {
-        //         yscale: log
-        //     },
-        //     score_3s: {
-        //         yscale: log
-        //     },
-        //     score_4s: {
-        //         yscale: log
-        //     },
-        //     score_5s: {
-        //         yscale: log
-        //     },
-        //     score_6s: {
-        //         yscale: log
-        //     }
-        // };
 
         pc.data(data)
             .bundlingStrength(2) // set bundling strength
             .smoothness(.25)
-            .bundleDimension("score_3s")
-            // .dimensions(dimensions)
+            .bundleDimension("ae3s")
             .hideAxis(["student_id"])
             .showControlPoints(false)
             .composite('lighter')
-            .alpha(0.1)
+            .alpha(.1)
             .color('#4ccb61')
             .mode("queue")
             .render()
             .brushMode("1D-axes")
             .reorderable()
-            .interactive()
-        ;
+            .interactive();
 
 
         pc.on('brush', function (d) {
@@ -60,69 +36,63 @@
             if (d.length === data.length || d.length === 0) {
                 return null;
             }
-
-
             // 如果数据没有发生改变, 也不用发生任何改变;
-            if(!isSelectedStudentIdChanged(d)){
+            if (!isSelectedStudentIdChanged(d)) {
                 return null;
             }
 
             debounceFunction(function () {
-                console.log(d);
-                const highlightenData = findHighLightenData(previousSelectedStudentsIdString);
+                const highlightenData = findHighLightenData(previousSelectedStudentsIdString)
                 highLightLinkedView(highlightenData);
-
             })
 
         });
         bindDblClickToClearHighlight(pc);
 
     };
-
-    //更新视图的时候 需要先把以前的dom清除
-    const clearDom = function(){
-        const $parcoordGap = $('#parcoord-gap');
+    // 清除dom节点;
+    const clearDom = function () {
+        const $parcoordGap = $('#parcoord-entropy');
         $parcoordGap.empty();
     };
 
     // 把数据存储到windows对象下;
     const storeDataInWindow = function (data) {
-        if(window['parcoods']['data'] == null){
+        if (window['parcoods']['data'] == null) {
             window['parcoods']['data'] = {};
         }
-
         const storedObject = {};
-        data.forEach(function(studentObj){
+        data.forEach(function (studentObj) {
             storedObject[studentObj['student_id']] = studentObj;
         });
 
-        window['parcoods']['data']['gap'] = storedObject;
+        window['parcoods']['data']['entropy'] = storedObject;
     };
 
-
     //为了两个图的联动,必须要把pc这个事例暴露出去到全局变量;
-    const storeParcoordsInstanceInWindows = function(parcoordsInstance){
+    const storeParcoordsInstanceInWindows = function (parcoordsInstance) {
         if (window['parcoods']['parcoordsInstance'] == null) {
             window['parcoods']['parcoordsInstance'] = {};
         }
-        window['parcoods']['parcoordsInstance']['gap'] = parcoordsInstance;
+        window['parcoods']['parcoordsInstance']['entropy'] = parcoordsInstance;
     };
+
 
     /**
      * 判断选中的学生id有没有发生变化
      * @param d
      * @returns {boolean}
      */
-    const isSelectedStudentIdChanged = function(d){
-        let selectedStudentsIdString = d.map(function(studentObj){
+    const isSelectedStudentIdChanged = function (d) {
+        let selectedStudentsIdString = d.map(function (studentObj) {
             return studentObj.student_id;
         });
 
-        selectedStudentsIdString = selectedStudentsIdString.sort(function(a,b){
-            return parseInt(a) -parseInt(b)
+        selectedStudentsIdString = selectedStudentsIdString.sort(function (a, b) {
+            return parseInt(a) - parseInt(b)
         }).toString();
 
-        const result =  selectedStudentsIdString !== previousSelectedStudentsIdString;
+        const result = selectedStudentsIdString !== previousSelectedStudentsIdString;
         previousSelectedStudentsIdString = selectedStudentsIdString;
 
         return result;
@@ -133,50 +103,45 @@
      * @param callback
      * @param timeout
      */
-    const debounceFunction = function(callback, timeout = 1000){
+    const debounceFunction = function (callback, timeout = 1000) {
 
-        if(setTimeoutId != null){
+        if (setTimeoutId != null) {
             clearTimeout(setTimeoutId)
         }
-        setTimeoutId = setTimeout(function(){
+        setTimeoutId = setTimeout(function () {
             callback();
-        },1000)
+        }, 1000)
     };
-
 
     const findHighLightenData = function (studentListString) {
         const studentListArray = studentListString.split(',');
 
         const highlightenArray = studentListArray.map(function (studentId) {
-            return window['parcoods']['data']['entropy'][studentId];
+            return window['parcoods']['data']['gap'][studentId];
         });
         return highlightenArray
     };
 
-
     // 高亮另外一个view的图
     const highLightLinkedView = function (highlightData) {
-        const parcoordsInstance = window['parcoods']['parcoordsInstance']['entropy'];
+        const parcoordsInstance = window['parcoods']['parcoordsInstance']['gap'];
         parcoordsInstance.highlight(highlightData);
     };
+
 
 
     //绑定双击坐标轴时间来清除highlight效果以及fade的class;
     const bindDblClickToClearHighlight = function(parcoordsInstance){
         debugger;
-        $('#parcoord-gap svg .dimension').dblclick(function(e){
+        $('#parcoord-entropy svg .dimension').dblclick(function(e){
             parcoordsInstance.clear('highlight');
-            $('#parcoord-gap .foreground').removeClass('faded');
-            $('#parcoord-gap .brushed').removeClass('faded');
+            $('#parcoord-entropy .foreground').removeClass('faded');
+            $('#parcoord-entropy .brushed').removeClass('faded');
         })
     };
 
-
-    if(window['parcoods'] == null){
-        window['parcoods'] = {};
-    }
-
-    window['parcoods']['parcoodsGap'] = {
+    //暴露方法到全局变量;
+    window['parcoods']['parcoodsEntropy'] = {
         init
     }
 

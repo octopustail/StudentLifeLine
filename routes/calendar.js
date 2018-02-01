@@ -28,11 +28,9 @@ const calendarDataProcess = function (req, res, next) {
  */
 const queryByTerm = function (query) {
 
-    console.log(query);
     const key = (query.year||config.calendar.defaultYear) + '-' + (query.term||config.calendar.defaultTerm);
     const dateSection = config.dateSection[key];
 
-    console.log(key,dateSection);
     return Promise.resolve({
         start: dateSection.start,
         end: dateSection.end
