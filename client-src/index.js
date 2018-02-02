@@ -8,7 +8,6 @@ import {init as dailyEntropyViewInit, reloadData as dailyEntropyViewReloadData} 
 
 import progressToggle from './component/progressHandler';
 
-
 /**
  * 项目的总开关，初始化其他的模块
  */

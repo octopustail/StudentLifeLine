@@ -3,6 +3,9 @@
     let previousSelectedStudentsIdString = '';
     let setTimeoutId = null;
 
+    if(window['parcoods'] == null){
+        window['parcoods'] = {};
+    }
 
     const init = function (data) {
 
@@ -68,7 +71,6 @@
             }
 
             debounceFunction(function () {
-                console.log(d);
                 const highlightenData = findHighLightenData(previousSelectedStudentsIdString);
                 highLightLinkedView(highlightenData);
 
@@ -98,7 +100,6 @@
 
         window['parcoods']['data']['gap'] = storedObject;
     };
-
 
     //为了两个图的联动,必须要把pc这个事例暴露出去到全局变量;
     const storeParcoordsInstanceInWindows = function(parcoordsInstance){
@@ -143,7 +144,6 @@
         },1000)
     };
 
-
     const findHighLightenData = function (studentListString) {
         const studentListArray = studentListString.split(',');
 
@@ -153,13 +153,11 @@
         return highlightenArray
     };
 
-
     // 高亮另外一个view的图
     const highLightLinkedView = function (highlightData) {
         const parcoordsInstance = window['parcoods']['parcoordsInstance']['entropy'];
         parcoordsInstance.highlight(highlightData);
     };
-
 
     //绑定双击坐标轴时间来清除highlight效果以及fade的class;
     const bindDblClickToClearHighlight = function(parcoordsInstance){
@@ -170,11 +168,6 @@
             $('#parcoord-gap .brushed').removeClass('faded');
         })
     };
-
-
-    if(window['parcoods'] == null){
-        window['parcoods'] = {};
-    }
 
     window['parcoods']['parcoodsGap'] = {
         init

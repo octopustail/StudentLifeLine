@@ -21,7 +21,6 @@ module.exports = function (app) {
     // 根据选择的数据情况来选择distinct的学生id;
     app.get('/calendardayfordistinctstudentid',require('./calendardayForDistinctStudentId.js'));
 
-
     // 获得学生的成绩数据;
     app.get('/parallelgap',require('./parallelgap.js'));
 
