@@ -72,12 +72,62 @@
 
             debounceFunction(function () {
                 const highlightenData = findHighLightenData(previousSelectedStudentsIdString);
-                highLightLinkedView(highlightenData);
+
+                if(hasHighlightData(pc) === false){
+                    // 没有高亮数据, 直接显示;
+                    highLightLinkedView(highlightenData);
+                }else{
+                    // 有高亮数据;
+                    const commonData = findCommonData(previousSelectedStudentsIdString,pc);
+                    if(commonData.length !==0){
+
+                        const entropyInstance = window['parcoods']['data']['entropy'];
+                        const commonDataInEntropyView = commonData.map(function(studentId){
+                            return entropyInstance[studentId];
+                        });
+
+                        highLightLinkedView(commonDataInEntropyView)
+
+                    }
+
+
+                }
+
 
             })
 
         });
         bindDblClickToClearHighlight(pc);
+
+    };
+
+    /**
+     * 判断函数有没有高亮;
+     */
+    const hasHighlightData = function(parcoordsInstance){
+        const highlightData = parcoordsInstance.highlight();
+        return !!highlightData.length;
+    };
+
+    /**
+     * 找到两份数据中公共的部分
+     * @param previousSelectedStudentsIdString 这是选中数据的studentid的字符串
+     * @param parcoordsInstance 这个视图的实例;
+     */
+    const findCommonData = function(previousSelectedStudentsIdString,parcoordsInstance){
+        const highlightData = parcoordsInstance.highlight();
+        const selectStudentIdArray = parcoordsInstance.brushed();
+        const commonData = [];
+        highlightData.forEach(function(studentObj){
+            selectStudentIdArray.forEach(function(selectStudentObj){
+                if(selectStudentObj['student_id'] === studentObj['student_id']){
+                    commonData.push(studentObj['student_id'])
+                }
+            });
+        });
+
+        return commonData;
+
 
     };
 
@@ -161,7 +211,6 @@
 
     //绑定双击坐标轴时间来清除highlight效果以及fade的class;
     const bindDblClickToClearHighlight = function(parcoordsInstance){
-        debugger;
         $('#parcoord-gap svg .dimension').dblclick(function(e){
             parcoordsInstance.clear('highlight');
             $('#parcoord-gap .foreground').removeClass('faded');
