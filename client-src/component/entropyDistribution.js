@@ -4,7 +4,6 @@ import $ from 'jquery';
 
 import progressToggle from './progressHandler';
 
-
 const entropyDistributionInstance = echarts.init(document.getElementById('entropy-distribution'));
 let option;
 const loadingOption = config.loading;
@@ -177,6 +176,8 @@ export function reloadData() {
         }
     };
 
+    bindInstanceWithBrush();
+
     entropyDistributionInstance.setOption(option);
     entropyDistributionInstance.hideLoading();
     progressToggle('close');
@@ -191,6 +192,15 @@ export function updateData(data) {
 
 }
 
+
+/**
+ * 绑定brush events
+ */
+const bindInstanceWithBrush = function(){
+    entropyDistributionInstance.on('brushSelected',function(e){
+        console.log(e);
+    })
+}
 
 /**
  * 根据选择的数据去 fetch 新的数据;

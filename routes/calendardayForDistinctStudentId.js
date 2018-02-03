@@ -34,13 +34,27 @@ const queryVerify = function (query) {
  * 根据数据来生成查询的SQL
  */
 const generateSQL = function (query) {
+    console.log(query);
     const dateWhereClause = '("' + query.dates.split(',').join('","') + '")';
-    let sql = `select distinct student_id from Student_Consumption where date in ${dateWhereClause}`;
+    let sql = `select distinct student_id from Student_Consumption where (date in ${dateWhereClause})`;
+
     if(query.location != null){
-        sql += `and type ="${query.location}"`;
+        sql += ` and (type ="${query.location}")`;
+    }
+    if(query.time != null){
+        const timeArray = query.time.split(',');
+        let time,timeEnd;
+        if(timeArray.length === 1){
+            time = timeArray[0].split('-');
+            sql += ` and (time between "${time[0]}" and "${time[1]}")`
+        }else{
+
+            time = timeArray[0].split('-');
+            timeEnd = timeArray[1].split('-');
+            sql += ` and (time between "${time[0]}" and "${time[1]}" or time between "${timeEnd[0]}" and "${timeEnd[1]}")`
+        }
     }
     sql += `;`;
-    console.log(sql);
     return Promise.resolve(sql);
 };
 

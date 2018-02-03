@@ -1,14 +1,14 @@
 @import "./global.less";
 
-
 body {
   height: 100% !important;
 
 }
-.progress{
-  height:5px;
-  position:absolute;
-  width:100%;
+
+.progress {
+  height: 5px;
+  position: absolute;
+  width: 100%;
 }
 
 .content {
@@ -19,8 +19,8 @@ body {
 
 .wrapper {
   width: @width;
-  min-width:@width;
-  max-width:@width;
+  min-width: @width;
+  max-width: @width;
   height: @height;
   background-color: @background-color;
   position: relative;
@@ -31,7 +31,7 @@ header {
   flex-wrap: nowrap;
   height: 50px;
   .logo {
-    color:@title-color;
+    color: @title-color;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -49,7 +49,7 @@ header {
     align-items: center;
 
     input {
-      color:@text-color;
+      color: @text-color;
       margin-left: 20px;
       vertical-align: middle;
       background-color: @content-color;
@@ -63,18 +63,18 @@ main {
   margin: 10px;
 }
 
-#calendar-count{
+#calendar-count {
   .box-shadow;
   background-color: @card-color;
   .border-radius;
-  width:460px;
-  height:240px;
-  right:0;
-  top:0;
+  width: 460px;
+  height: 240px;
+  right: 0;
+  top: 0;
   position: absolute;
   padding: 0 2px 0 2px;
-  li.active{
-    a{
+  li.active {
+    a {
       color: #41d0ab;
       background-color: #222222;
       border: 1px solid #464545;
@@ -83,8 +83,8 @@ main {
     }
   }
 
-  li.active-forever{
-    a{
+  li.active-forever {
+    a {
       color: @important-color;
       background-color: #222222;
       border: 1px solid #464545;
@@ -93,18 +93,18 @@ main {
     }
   }
 
-  .dropdown-menu{
-    li{
-      a{
+  .dropdown-menu {
+    li {
+      a {
         color: #fff;
       }
-      a.active{
-          color:@important-color !important;
+      a.active {
+        color: @important-color !important;
       }
 
     }
 
-    .divider{
+    .divider {
       height: 2px !important;
       margin: 0 !important;
       overflow: hidden;
@@ -112,29 +112,56 @@ main {
     }
   }
 
-  #calendar-view{
-    height:204px;
+  #calendar-view {
+    height: 204px;
     width: 456px;
   }
   .nav li a {
     padding: 6px 15px !important;
   }
 
-  #calendar-search{
+  #calendar-search {
     position: absolute;
     top: 210px;
-    padding:0 10px;
-    font-size:10px;
+    padding: 0 10px;
+    font-size: 10px;
     margin: 2px 0 0 10px;
   }
 
 }
-#daily-entropy-view{
+
+#daily-entropy-view {
   .box-shadow;
   background-color: @card-color;
   .border-radius;
   width: 780px;;
   height: 492px;
+
+
+  .resize {
+    fill-opacity: .5;
+    cursor: move;
+    stroke: black;
+    stroke-width: 1px;
+  }
+  .extent {
+    fill-opacity: .5;
+    fill: @content-color;
+    cursor: grab;
+    //stroke: black;
+    //stroke-width: 1px;
+  }
+
+  .e {
+    fill: @text-color;
+    cursor: move;
+  }
+
+  .w {
+    fill: @text-color;
+    cursor: move;
+  }
+
 }
 
 #entropy-distribution {
@@ -148,38 +175,39 @@ main {
   top: 250px;
 }
 
-
-.nav-tabs > li > a, .nav-pills > li > a{
-  color:@text-color;
+.nav-tabs > li > a, .nav-pills > li > a {
+  color: @text-color;
 }
 
-#parcoord-gap,#parcoord-entropy{
-  background-color:@card-color;
+#parcoord-gap, #parcoord-entropy {
+  background-color: @card-color;
   .border-radius;
-  margin-top:10px;
-  g.tick text,line{
-    fill:@text-color;
-    opacity:0.2;
-    font-size:8px;
+  margin-top: 10px;
+  g.tick text, line {
+    fill: @text-color;
+    opacity: 0.2;
+    font-size: 8px;
   }
 
-  g.axis text{
-    fill:@text-color;
-    opacity:0.3;
-    font-size:12px;
+  g.axis text {
+    fill: @text-color;
+    opacity: 0.3;
+    font-size: 12px;
   }
 
-  .dimension{
-    path.domain{
-      stroke:@text-color !important;
-      opacity:0.3;
+  .dimension {
+    path.domain {
+      stroke: @text-color !important;
+      opacity: 0.3;
 
     }
   }
 }
 
-#parcoord-entropy{
+#parcoord-entropy {
   position: absolute;
   top: 492px;
   left: 640px;
 }
+
+

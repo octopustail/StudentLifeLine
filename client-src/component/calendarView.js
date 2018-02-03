@@ -12,8 +12,10 @@ import progressToggle from './progressHandler';
 import config from './../config'
 
 import {reloadData as dailyEntropyViewReloadData} from './dailyEntropyView';
-const parcoods = window.parcoods;
-
+import {
+    store as selectConditionInitStore,
+    clear as selectConditionInitClear
+} from './selectCondition'
 
 /**
  * 用来记录数据的一个缓冲，如果已经缓冲了，就不用再去访问服务器了
@@ -284,12 +286,18 @@ const calendarSearchBtnClickBind = function () {
     const calendarBtn = $('#calendar-search');
 
     calendarBtn.click(function () {
+        const parcoods = window.parcoods;
+
         let selectedDate = model.selectedDate;
         if (selectedDate.length === 0) return null;
 
         selectedDate = selectedDate.map((val) => {
             return val.split(',')[0];
         }).join(',');
+
+        // 记录选中的天数;
+        selectConditionInitClear('dates');
+        selectConditionInitStore('dates',selectedDate.split(','));
 
         progressToggle('open');
         $.ajax({
@@ -309,15 +317,15 @@ const calendarSearchBtnClickBind = function () {
             const distinctStudentId = data.toString();
 
             $.ajax({
-                url:`/parallelgap?studentid=${distinctStudentId}`
-            }).done(function(data){
+                url: `/parallelgap?studentid=${distinctStudentId}`
+            }).done(function (data) {
                 parcoods.parcoodsGap.init(data);
                 progressToggle('close');
             });
 
             $.ajax({
-                url:`/entropybystudents?studentId=${distinctStudentId}`
-            }).done(function(data){
+                url: `/entropybystudents?studentId=${distinctStudentId}`
+            }).done(function (data) {
                 parcoods.parcoodsEntropy.init(data.meal);
                 progressToggle('close');
             });
