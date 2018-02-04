@@ -11,7 +11,10 @@ import echarts from 'echarts';
 import progressToggle from './progressHandler';
 import config from './../config'
 
+
 import {reloadData as dailyEntropyViewReloadData} from './dailyEntropyView';
+import {getSelectedData} from './selectStudentInfoTable';
+
 import {
     store as selectConditionInitStore,
     clear as selectConditionInitClear
@@ -316,6 +319,8 @@ const calendarSearchBtnClickBind = function () {
             // 这是选中的天数的学生列表合集;
             const distinctStudentId = data.toString();
 
+
+
             $.ajax({
                 url: `/parallelgap?studentid=${distinctStudentId}`
             }).done(function (data) {
@@ -327,6 +332,8 @@ const calendarSearchBtnClickBind = function () {
                 url: `/entropybystudents?studentId=${distinctStudentId}`
             }).done(function (data) {
                 parcoods.parcoodsEntropy.init(data.meal);
+                //@TODO 完善;
+                getSelectedData();
                 progressToggle('close');
             });
 
