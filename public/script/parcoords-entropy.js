@@ -43,20 +43,26 @@
 
             debounceFunction(function () {
                 const highlightenData = findHighLightenData(previousSelectedStudentsIdString);
+                const getSelectedData = window.component.selectStudentTable.getSelectedData;
 
                 if(hasHighlightData(pc) === false){
                     // 没有高亮数据, 直接显示;
                     highLightLinkedView(highlightenData);
+                    getSelectedData(window.parcoods.data.gap,d);
+
                 }else{
                     // 有高亮数据;
                     const commonData = findCommonData(previousSelectedStudentsIdString,pc);
                     if(commonData.length !==0){
 
-                        const entropyInstance = window['parcoods']['data']['gap'];
+                        const entropyDataset = window['parcoods']['data']['gap'];
                         const commonDataInEntropyView = commonData.map(function(studentId){
-                            return entropyInstance[studentId];
+                            return entropyDataset[studentId];
                         });
-                        highLightLinkedView(commonDataInEntropyView)
+                        highLightLinkedView(commonDataInEntropyView);
+
+                        getSelectedData(commonDataInEntropyView,window.parcoods.data.entropy);
+
                     }
 
 
@@ -183,12 +189,20 @@
 
     //绑定双击坐标轴时间来清除highlight效果以及fade的class;
     const bindDblClickToClearHighlight = function(parcoordsInstance){
+        const clearHighlight = function(parcoordsInstance){
+            const highlightData = parcoordsInstance.highlight();
+            parcoordsInstance.unhighlight(highlightData)
+        };
+
         $('#parcoord-entropy svg .dimension').dblclick(function(e){
-            parcoordsInstance.clear('highlight');
+
+            clearHighlight(parcoordsInstance);
             $('#parcoord-entropy .foreground').removeClass('faded');
             $('#parcoord-entropy .brushed').removeClass('faded');
         })
     };
+
+
 
     //暴露方法到全局变量;
     window['parcoods']['parcoodsEntropy'] = {

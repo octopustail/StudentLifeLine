@@ -1,9 +1,9 @@
-(function(window){
+(function (window) {
     let data = null;
     let previousSelectedStudentsIdString = '';
     let setTimeoutId = null;
 
-    if(window['parcoods'] == null){
+    if (window['parcoods'] == null) {
         window['parcoods'] = {};
     }
 
@@ -66,27 +66,33 @@
 
 
             // 如果数据没有发生改变, 也不用发生任何改变;
-            if(!isSelectedStudentIdChanged(d)){
+            if (!isSelectedStudentIdChanged(d)) {
                 return null;
             }
 
             debounceFunction(function () {
                 const highlightenData = findHighLightenData(previousSelectedStudentsIdString);
+                const getSelectedData = window.component.selectStudentTable.getSelectedData;
 
-                if(hasHighlightData(pc) === false){
+                if (hasHighlightData(pc) === false) {
                     // 没有高亮数据, 直接显示;
                     highLightLinkedView(highlightenData);
-                }else{
-                    // 有高亮数据;
-                    const commonData = findCommonData(previousSelectedStudentsIdString,pc);
-                    if(commonData.length !==0){
 
-                        const entropyInstance = window['parcoods']['data']['entropy'];
-                        const commonDataInEntropyView = commonData.map(function(studentId){
-                            return entropyInstance[studentId];
+                    getSelectedData(d);
+                } else {
+                    // 有高亮数据;
+                    debugger;
+                    const commonData = findCommonData(previousSelectedStudentsIdString, pc);
+                    if (commonData.length !== 0) {
+
+                        const entropyDataset = window['parcoods']['data']['entropy'];
+                        const commonDataInEntropyView = commonData.map(function (studentId) {
+                            return entropyDataset[studentId];
                         });
 
-                        highLightLinkedView(commonDataInEntropyView)
+                        highLightLinkedView(commonDataInEntropyView);
+
+                        getSelectedData(window.parcoods.data.gap,commonDataInEntropyView);
 
                     }
 
@@ -104,7 +110,7 @@
     /**
      * 判断函数有没有高亮;
      */
-    const hasHighlightData = function(parcoordsInstance){
+    const hasHighlightData = function (parcoordsInstance) {
         const highlightData = parcoordsInstance.highlight();
         return !!highlightData.length;
     };
@@ -114,13 +120,13 @@
      * @param previousSelectedStudentsIdString 这是选中数据的studentid的字符串
      * @param parcoordsInstance 这个视图的实例;
      */
-    const findCommonData = function(previousSelectedStudentsIdString,parcoordsInstance){
+    const findCommonData = function (previousSelectedStudentsIdString, parcoordsInstance) {
         const highlightData = parcoordsInstance.highlight();
         const selectStudentIdArray = parcoordsInstance.brushed();
         const commonData = [];
-        highlightData.forEach(function(studentObj){
-            selectStudentIdArray.forEach(function(selectStudentObj){
-                if(selectStudentObj['student_id'] === studentObj['student_id']){
+        highlightData.forEach(function (studentObj) {
+            selectStudentIdArray.forEach(function (selectStudentObj) {
+                if (selectStudentObj['student_id'] === studentObj['student_id']) {
                     commonData.push(studentObj['student_id'])
                 }
             });
@@ -132,19 +138,19 @@
     };
 
     //更新视图的时候 需要先把以前的dom清除
-    const clearDom = function(){
+    const clearDom = function () {
         const $parcoordGap = $('#parcoord-gap');
         $parcoordGap.empty();
     };
 
     // 把数据存储到windows对象下;
     const storeDataInWindow = function (data) {
-        if(window['parcoods']['data'] == null){
+        if (window['parcoods']['data'] == null) {
             window['parcoods']['data'] = {};
         }
 
         const storedObject = {};
-        data.forEach(function(studentObj){
+        data.forEach(function (studentObj) {
             storedObject[studentObj['student_id']] = studentObj;
         });
 
@@ -152,7 +158,7 @@
     };
 
     //为了两个图的联动,必须要把pc这个事例暴露出去到全局变量;
-    const storeParcoordsInstanceInWindows = function(parcoordsInstance){
+    const storeParcoordsInstanceInWindows = function (parcoordsInstance) {
         if (window['parcoods']['parcoordsInstance'] == null) {
             window['parcoods']['parcoordsInstance'] = {};
         }
@@ -164,16 +170,16 @@
      * @param d
      * @returns {boolean}
      */
-    const isSelectedStudentIdChanged = function(d){
-        let selectedStudentsIdString = d.map(function(studentObj){
+    const isSelectedStudentIdChanged = function (d) {
+        let selectedStudentsIdString = d.map(function (studentObj) {
             return studentObj.student_id;
         });
 
-        selectedStudentsIdString = selectedStudentsIdString.sort(function(a,b){
-            return parseInt(a) -parseInt(b)
+        selectedStudentsIdString = selectedStudentsIdString.sort(function (a, b) {
+            return parseInt(a) - parseInt(b)
         }).toString();
 
-        const result =  selectedStudentsIdString !== previousSelectedStudentsIdString;
+        const result = selectedStudentsIdString !== previousSelectedStudentsIdString;
         previousSelectedStudentsIdString = selectedStudentsIdString;
 
         return result;
@@ -184,14 +190,14 @@
      * @param callback
      * @param timeout
      */
-    const debounceFunction = function(callback, timeout = 1000){
+    const debounceFunction = function (callback, timeout = 1000) {
 
-        if(setTimeoutId != null){
+        if (setTimeoutId != null) {
             clearTimeout(setTimeoutId)
         }
-        setTimeoutId = setTimeout(function(){
+        setTimeoutId = setTimeout(function () {
             callback();
-        },1000)
+        }, 1000)
     };
 
     const findHighLightenData = function (studentListString) {
@@ -210,9 +216,14 @@
     };
 
     //绑定双击坐标轴时间来清除highlight效果以及fade的class;
-    const bindDblClickToClearHighlight = function(parcoordsInstance){
-        $('#parcoord-gap svg .dimension').dblclick(function(e){
-            parcoordsInstance.clear('highlight');
+    const bindDblClickToClearHighlight = function (parcoordsInstance) {
+        const clearHighlight = function(parcoordsInstance){
+            const highlightData = parcoordsInstance.highlight();
+            parcoordsInstance.unhighlight(highlightData)
+        };
+
+        $('#parcoord-gap svg .dimension').dblclick(function (e) {
+            clearHighlight(parcoordsInstance);
             $('#parcoord-gap .foreground').removeClass('faded');
             $('#parcoord-gap .brushed').removeClass('faded');
         })

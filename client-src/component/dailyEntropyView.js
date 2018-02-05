@@ -158,7 +158,6 @@ const bindSearchWithBrush = function () {
             url:`/calendardayfordistinctstudentid?dates=${dates}&location=${location}&time=${time}`
         }).done(function(data){
             progressToggle('close');
-            debugger;
             highlightParcoods(data);
 
 

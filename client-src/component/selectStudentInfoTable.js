@@ -1,10 +1,28 @@
-const combineData = function (gapData,entropyData) {
-    let entropyObj, gapObj;
+/**
+ * 合并两个数据, 以数据量少的为主来合并;
+ * @param datasetA 数据列表1
+ * @param datasetB 数据列表2;
+ * @returns {{}}
+ */
+const combineData = function (datasetA, datasetB) {
+
+    const lengthA = Object.keys(datasetA).length;
+    const lengthB = Object.keys(datasetB).length;
+    let datasetWithLessData, datasetWithMoreData;
+
+    if (lengthA <= lengthB) {
+        datasetWithLessData = datasetA;
+        datasetWithMoreData = datasetB;
+    } else {
+        datasetWithLessData = datasetB;
+        datasetWithMoreData = datasetA;
+    }
+    let lessDataObj, moreDataObj;
     let result = {};
-    Object.keys(entropyData).forEach(function (studentId) {
-        entropyObj = entropyData[studentId];
-        gapObj = gapData[studentId];
-        result[studentId] = Object.assign({}, entropyObj, gapObj);
+    Object.keys(datasetWithLessData).forEach(function (studentId) {
+        lessDataObj = datasetWithLessData[studentId];
+        moreDataObj = datasetWithMoreData[studentId];
+        result[studentId] = Object.assign({}, lessDataObj, moreDataObj);
     });
     return result;
 };
@@ -15,19 +33,45 @@ const combineData = function (gapData,entropyData) {
  * @param entropyData
  */
 const getSelectedData = function (gapData = window.parcoods.data.gap, entropyData = window.parcoods.data.entropy) {
-    debugger;
-    const dataset = combineData(gapData,entropyData);
+
+    const formatData = function (dataArray) {
+        let tempGap = {};
+
+        dataArray.forEach(function (studentObj) {
+            tempGap[studentObj['student_id']] = studentObj;
+        });
+        return tempGap;
+    };
+    if (Array.isArray(gapData)) {
+        gapData = formatData(gapData)
+    }
+    if (Array.isArray(entropyData)) {
+        entropyData = formatData(entropyData)
+    }
+
+    const dataset = combineData(gapData, entropyData);
     clearCurrentTable();
     generateTableDOM(dataset);
 
 };
 
+
 const clearCurrentTable = function () {
     $('#selected-student-info').empty();
 };
 
-const fillCurrentTable = function () {
+/**
+ * 需要把模块暴露到windows对象以供parallel使用;
+ */
+const exportModuleToWindow = function () {
+    window.component = {};
+    window.component.selectStudentTable = {
+        getSelectedData
+    };
+};
 
+const init = function () {
+    exportModuleToWindow();
 };
 
 /**
@@ -70,9 +114,10 @@ const generateTableDOM = function (dataset, sortedStudentIdArray = Object.keys(d
             </tbody>
         </table>`);
 
-    document.getElementById('selected-student-info').appendChild($html[$html.length-1])
+    document.getElementById('selected-student-info').appendChild($html[$html.length - 1])
 };
 
 export {
+    init,
     getSelectedData
 }
