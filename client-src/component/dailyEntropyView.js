@@ -8,6 +8,7 @@ import {
     clear as selectConditionInitClear,
     get as selectConditionInitGet
 } from './selectCondition'
+import {getSelectedData} from './selectStudentInfoTable';
 
 /**
  * 初始化只执行一次
@@ -157,9 +158,9 @@ const bindSearchWithBrush = function () {
             url:`/calendardayfordistinctstudentid?dates=${dates}&location=${location}&time=${time}`
         }).done(function(data){
             progressToggle('close');
-            console.log(data);
-            highlightParcoods(data);
             debugger;
+            highlightParcoods(data);
+
 
         })
 
@@ -183,10 +184,10 @@ const findHighlightDataArray = function(studentIdArray,parcoordData){
  */
 const highlightParcoods = function(studentIdArray){
     const {gap,entropy} = window.parcoods.parcoordsInstance;
-    debugger;
     const gapData = findHighlightDataArray(studentIdArray,window.parcoods.data.gap);
     const entropyData = findHighlightDataArray(studentIdArray,window.parcoods.data.entropy);
 
+    getSelectedData(gapData,entropyData);
     gap.highlight(gapData);
     entropy.highlight(entropyData);
 };

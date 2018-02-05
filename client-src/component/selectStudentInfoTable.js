@@ -1,27 +1,29 @@
-const combineData = function () {
-    const tempDataset = window.parcoods.data;
+const combineData = function (gapData,entropyData) {
     let entropyObj, gapObj;
     let result = {};
-    Object.keys(tempDataset.entropy).forEach(function (studentId) {
-        entropyObj = tempDataset.entropy[studentId];
-        gapObj = tempDataset.gap[studentId];
+    Object.keys(entropyData).forEach(function (studentId) {
+        entropyObj = entropyData[studentId];
+        gapObj = gapData[studentId];
         result[studentId] = Object.assign({}, entropyObj, gapObj);
     });
     return result;
 };
 
-
-const getSelectedData = function () {
-
-
-    const dataset = combineData();
+/**
+ * 把数据两者的传入,并且来updates Student Info Table;
+ * @param gapData
+ * @param entropyData
+ */
+const getSelectedData = function (gapData = window.parcoods.data.gap, entropyData = window.parcoods.data.entropy) {
+    debugger;
+    const dataset = combineData(gapData,entropyData);
+    clearCurrentTable();
     generateTableDOM(dataset);
-    // clearCurrentTable();
-    // fillCurrentTable();
+
 };
 
 const clearCurrentTable = function () {
-
+    $('#selected-student-info').empty();
 };
 
 const fillCurrentTable = function () {
@@ -33,7 +35,7 @@ const fillCurrentTable = function () {
  */
 const queryWithchoosenStudentId = function () {
     $('#table-submit').click()
-}
+};
 
 /**
  * 生成table的dom;
@@ -47,7 +49,6 @@ const generateTableDOM = function (dataset, sortedStudentIdArray = Object.keys(d
     const tbodyOrderHtmlString =
         `
         ${sortedStudentIdArray.map(function (studentId) {
-            debugger;
             const studentObj = dataset[studentId];
             const studentHtmlString = headOrder.map(function (columnName) {
                 return `<td>${studentObj[columnName]}</td>`
@@ -59,19 +60,17 @@ const generateTableDOM = function (dataset, sortedStudentIdArray = Object.keys(d
 
         `;
 
-
-
-    const html =
-        `<table class="table table-hover table-dark">
+    const $html =
+        $(`<table class="table table-hover table-dark">
             <thead>
              ${theadOrderHtmlString}
             </thead>
             <tbody>
             ${tbodyOrderHtmlString}
             </tbody>
-        </table>`;
+        </table>`);
 
-    document.getElementById('selected-student-info').appendChild($(html)[1])
+    document.getElementById('selected-student-info').appendChild($html[$html.length-1])
 };
 
 export {
