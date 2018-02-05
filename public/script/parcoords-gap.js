@@ -81,7 +81,6 @@
                     getSelectedData(d);
                 } else {
                     // 有高亮数据;
-                    debugger;
                     const commonData = findCommonData(previousSelectedStudentsIdString, pc);
                     if (commonData.length !== 0) {
 

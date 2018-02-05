@@ -60,7 +60,6 @@
                             return entropyDataset[studentId];
                         });
                         highLightLinkedView(commonDataInEntropyView);
-
                         getSelectedData(commonDataInEntropyView,window.parcoods.data.entropy);
 
                     }
