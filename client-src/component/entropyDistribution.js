@@ -25,32 +25,34 @@ export function init() {
  * @returns {{xAxisForMeal: Array, yAxisForMeal: Array, xAxisForShower: Array, yAxisForShower: Array}}
  */
 const transformDataForEcharts = function (data) {
+    debugger;
 
-    const xAxisForMeal = [];
-    const yAxisForMeal = [];
-    const xAxisForShower = [];
-    const yAxisForShower = [];
+    const transformData = function(data){
+        const transformDataObject = {};
+        let sortedKeys = Object.keys(data).sort(function (a, b) {
+            return parseFloat(a) - parseFloat(b);
+        });
 
+        sortedKeys.forEach(function (key) {
+            let fixedKey = parseFloat(key).toFixed(2);
+            let fixedValue = parseFloat(data[key]);
+            if(transformDataObject[fixedKey] = null){
+                transformDataObject[fixedKey] = fixedValue;
+            }else{
+                transformDataObject[fixedKey] += fixedValue;
+            }
+        });
 
-    let sortedKeys = Object.keys(data.meal).sort(function (a, b) {
-        return parseFloat(a) - parseFloat(b);
-    });
-
-    sortedKeys.forEach(function (key) {
-        xAxisForMeal.push(parseFloat(key).toFixed(1));
-        yAxisForMeal.push(parseFloat(data['meal'][key]));
-    });
-
-    sortedKeys = Object.keys(data.shower).sort(function (a, b) {
-        return parseFloat(a) - parseFloat(b);
-    });
-
-
-    sortedKeys.forEach(function (key) {
-        xAxisForShower.push(parseFloat(key).toFixed(1));
-        yAxisForShower.push(parseFloat(data['shower'][key]));
-    });
-
+        const xAxis = Object.keys(transformDataObject).sort(function(a,b){
+            return parseFloat(a) - parseFloat(b);
+        });
+        const yAxis = xAxis.map(function(key){
+            return transformDataObject[key]
+        });
+        return [xAxis,yAxis];
+    };
+    const [xAxisForMeal,yAxisForMeal] = transformData(data['meal']);
+    const [xAxisForShower,yAxisForShower] = transformData(data['shower']);
 
     return {xAxisForMeal, yAxisForMeal, xAxisForShower, yAxisForShower}
 };
@@ -63,6 +65,7 @@ export function reloadData() {
 
     const {xAxisForMeal, yAxisForMeal, xAxisForShower, yAxisForShower} = transformDataForEcharts(entropyKDE);
 
+    debugger;
     option = {
         backgroundColor: config.defaultColor.cardColor,
         xAxis: {
@@ -189,8 +192,8 @@ export function reloadData() {
  */
 export function updateData(data) {
     entropyDistributionInstance.showLoading(loadingOption);
-
 }
+
 
 
 /**
@@ -200,7 +203,7 @@ const bindInstanceWithBrush = function(){
     entropyDistributionInstance.on('brushSelected',function(e){
         console.log(e);
     })
-}
+};
 
 /**
  * 根据选择的数据去 fetch 新的数据;
