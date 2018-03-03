@@ -270,10 +270,13 @@ export function highlightByOrder(data) {
  */
 const bindInstanceWithBrush = function () {
     entropyDistributionInstance.on('brushSelected', function (e) {
-        // console.log(e);
+        console.log(e);
     })
 };
 
+/**
+ * 绑定点击legend事件；
+ */
 const changeLegendEvents = function () {
     entropyDistributionInstance.on('legendselectchanged', function (e) {
         let changeLegend, changeLegendBar;
@@ -304,11 +307,15 @@ const changeLegendEvents = function () {
     })
 };
 
+/**
+ * 创建一个小的div来覆盖下面的多出来的legend
+ */
 const addAPatchOnTheUnwantedLegend = function () {
     const entropyDistributionDiv = document.getElementById('entropy-distribution');
     const patch = document.createElement('div');
-    patch.setAttribute("id", 'patch_in_entropy_distribution');
+    patch.setAttribute("id", 'patch-in-entropy-distribution');
     entropyDistributionDiv.appendChild(patch);
+    $(entropyDistributionDiv).append(`<button type="button" class="btn btn-success btn-sm" id="entropy-distribution-search">Search</button>`)
 };
 
 /**
