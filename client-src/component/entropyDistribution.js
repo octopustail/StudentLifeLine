@@ -21,6 +21,9 @@ export function init() {
     progressToggle('open');
     entropyDistributionInstance.showLoading(loadingOption);
     reloadData();
+
+    // 暴露给全局变量;
+    window.highlightByOrder = highlightByOrder;
 }
 
 /**
@@ -69,6 +72,7 @@ export function reloadData() {
     [xAxisForMeal, yAxisForMeal, xAxisForShower, yAxisForShower] = transformDataForEcharts(entropyKDE);
 
     option = {
+        color: [config.defaultColor.highlightColor, config.defaultColor.highlightSecondColor],
         backgroundColor: config.defaultColor.cardColor,
         xAxis: {
             type: 'category',
@@ -81,14 +85,32 @@ export function reloadData() {
             }
         },
         legend: {
-            show: false,
-            data: ['Meal', 'Shower'],
+            selectedMode: true,
+            show: true,
+            data: [{
+                name: 'Meal'
+            }, {
+                name: 'Shower'
+            }, {
+                name: 'Shower Bar',
+                show: false,
+                textStyle: {
+                    color: config.defaultColor.cardColor
+                }
+            }, {
+                name: 'Meal Bar',
+                show: false,
+                textStyle: {
+                    color: config.defaultColor.cardColor
+                }
+            }],
             right: 10,
             top: 40,
             orient: 'vertical',
             textStyle: {
                 color: config.defaultColor.textColor
             },
+            inactiveColor: config.defaultColor.textColor,
             align: 'right',
 
         },
@@ -186,6 +208,8 @@ export function reloadData() {
     };
 
     bindInstanceWithBrush();
+    changeLegendEvents();
+    addAPatchOnTheUnwantedLegend();
 
     entropyDistributionInstance.setOption(option);
     entropyDistributionInstance.hideLoading();
@@ -204,7 +228,7 @@ export function updateData(data) {
  * 传入一个order的Array然后来高亮
  * @param orderArray
  */
-export function highlightData(orderArray) {
+function highlightData(orderArray) {
     let mealHighlightIndex = [], showerHighlightIndex = [];
 
     if (orderArray['meal'] != null) {
@@ -226,14 +250,65 @@ export function highlightData(orderArray) {
     }
 }
 
+/**
+ * 传入order的list
+ */
+export function highlightByOrder(data) {
+
+    debugger;
+
+    highlightData({
+        meal: {
+            hiighlight: []
+        },
+        shower: {}
+    })
+}
 
 /**
  * 绑定brush events
  */
 const bindInstanceWithBrush = function () {
     entropyDistributionInstance.on('brushSelected', function (e) {
-        console.log(e);
+        // console.log(e);
     })
+};
+
+const changeLegendEvents = function () {
+    entropyDistributionInstance.on('legendselectchanged', function (e) {
+        let changeLegend, changeLegendBar;
+        if (e.name === 'Meal') {
+            changeLegend = 'Meal';
+            changeLegendBar = 'Meal Bar'
+        } else {
+            changeLegend = 'Shower';
+            changeLegendBar = 'Shower Bar'
+        }
+
+        //Meal从开到关
+        if (e.selected[changeLegendBar] === true && e.selected[changeLegend] === false) {
+            entropyDistributionInstance.dispatchAction({
+                type: 'legendUnSelect',
+                name: changeLegendBar
+            })
+        }
+        //Meal从关到开
+        else if (e.selected[changeLegendBar] === false && e.selected[changeLegend] === true) {
+            entropyDistributionInstance.dispatchAction({
+                type: 'legendSelect',
+                name: changeLegendBar
+            })
+        }
+
+
+    })
+};
+
+const addAPatchOnTheUnwantedLegend = function () {
+    const entropyDistributionDiv = document.getElementById('entropy-distribution');
+    const patch = document.createElement('div');
+    patch.setAttribute("id", 'patch_in_entropy_distribution');
+    entropyDistributionDiv.appendChild(patch);
 };
 
 /**

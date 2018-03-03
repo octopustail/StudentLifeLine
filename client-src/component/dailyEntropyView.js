@@ -10,6 +10,8 @@ import {
 } from './selectCondition'
 import {getSelectedData} from './selectStudentInfoTable';
 
+import {highlightByOrder} from './entropyDistribution';
+
 /**
  * 初始化只执行一次
  */
@@ -159,12 +161,12 @@ const bindSearchWithBrush = function () {
         }).done(function(data){
             progressToggle('close');
             highlightParcoods(data);
-
-
+            highlightEntropyDistribution(data);
         })
 
     })
 };
+
 
 
 const findHighlightDataArray = function(studentIdArray,parcoordData){
@@ -178,7 +180,7 @@ const findHighlightDataArray = function(studentIdArray,parcoordData){
 };
 
 /**
- * 根据学生的idarray来高亮两个parcoords views
+ * 根据学生的idArray来高亮两个parcoords views
  * @param studentIdArray
  */
 const highlightParcoods = function(studentIdArray){
@@ -186,9 +188,29 @@ const highlightParcoods = function(studentIdArray){
     const gapData = findHighlightDataArray(studentIdArray,window.parcoods.data.gap);
     const entropyData = findHighlightDataArray(studentIdArray,window.parcoods.data.entropy);
 
+
     getSelectedData(gapData,entropyData);
     gap.highlight(gapData);
     entropy.highlight(entropyData);
+};
+
+const highlightEntropyDistribution= function(studentIdArray){
+    const entropyData = findHighlightDataArray(studentIdArray,window.parcoods.data.entropy);
+
+    debugger;
+    let entropyArray = [];
+
+    entropyData.forEach(function(student){
+        ['ae1s','ae2s','ae3s','ae4s','ae5s','ae6s'].forEach(function(key){
+            let entropy = parseFloat(student[key]).toFixed(2);
+            if(entropy!= 0){
+                entropyArray.push(entropy)
+            }
+        })
+    });
+
+    entropyArray = Array.from(new Set(entropyArray));
+    highlightByOrder(entropyArray)
 };
 
 

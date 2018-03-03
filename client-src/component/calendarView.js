@@ -10,6 +10,7 @@ import $ from 'jquery';
 import echarts from 'echarts';
 import progressToggle from './progressHandler';
 import config from './../config'
+import {highlightByOrder} from './entropyDistribution';
 
 
 import {reloadData as dailyEntropyViewReloadData} from './dailyEntropyView';
@@ -318,8 +319,6 @@ const calendarSearchBtnClickBind = function () {
         }).done(function (data) {
             // 这是选中的天数的学生列表合集;
             const distinctStudentId = data.toString();
-
-
 
             $.ajax({
                 url: `/parallelgap?studentid=${distinctStudentId}`
