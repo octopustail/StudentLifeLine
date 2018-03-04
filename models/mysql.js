@@ -18,6 +18,7 @@ module.exports = function (sql, resolve, reject) {
       reject(error);
       throw error;
     }
+    connection.end();
     resolve(results);
   });
 };

@@ -47,13 +47,21 @@ header {
     width: 100%;
     display: flex;
     align-items: center;
+    margin-right: 10px;
 
     input {
       color: @text-color;
       margin-left: 20px;
       vertical-align: middle;
       background-color: @content-color;
-      width: 50%;
+      width: 90%;
+    }
+    #student-search {
+      position: absolute;
+      padding: 0 10px;
+      font-size: 10px;
+      margin: 2px 0 0 10px;
+      right: 20px;
     }
   }
 }
@@ -137,7 +145,6 @@ main {
   width: 780px;;
   height: 492px;
 
-
   .resize {
     fill-opacity: .5;
     cursor: move;
@@ -182,7 +189,7 @@ main {
     background: @card-color;
   }
 
-  #entropy-distribution-search{
+  #entropy-distribution-search {
     padding: 0 10px;
     font-size: 10px;
     margin: 2px 0 0 10px;
@@ -192,8 +199,6 @@ main {
   }
 
 }
-
-
 
 .nav-tabs > li > a, .nav-pills > li > a {
   color: @text-color;
@@ -230,14 +235,14 @@ main {
   left: 640px;
 }
 
-#selected-student-info{
-  overflow:auto;
+#selected-student-info {
+  overflow: auto;
   background-color: @card-color;
-  height:200px;
-  margin-top:10px;
+  height: 200px;
+  margin-top: 10px;
   .border-radius;
   text-align: center;
-  th{
+  th {
     text-align: center;
   }
 }

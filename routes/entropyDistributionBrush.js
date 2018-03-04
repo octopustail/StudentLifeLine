@@ -1,18 +1,21 @@
 const DataProcesClain = require('../controllers/DataProcessChain.js');
 const queryInDatabase = require('./../controllers/queryInDatabase');
+const mealEntropyDistributionStudentId = require('../models/mealEntropyDistributionStudentId.json');
+const showerEntropyDistributionStudentId = require('../models/showerEntropyDistributionStudentId.json');
 
 
+let result;
 const entropyDistributionDataProcess = function (req, res, next) {
     const queryProcessClain = new DataProcesClain(req.query);
 
     const sendToClientHandler = function () {
-        res.send(data);
+        res.send(result);
         res.end();
         return Promise.resolve();
     };
 
-    // calKDE, kdeDataProcess
-    queryProcessClain.addChain([queryVerify, generateSQLForMeal, queryInDatabase, storeMealData, generateSQLForShower, queryInDatabase, dataProcess, calKDE])
+    // , queryInDatabase,dataProcess
+    queryProcessClain.addChain([queryVerify, getStudentIdList])
         .sendToClient(sendToClientHandler);
 
 };
@@ -23,65 +26,51 @@ const entropyDistributionDataProcess = function (req, res, next) {
  */
 const queryVerify = function (query) {
     //只会传认可的白名单数据;
-    return Promise.resolve(query);
+    // const query.brushed = {Meal: ['1.43', '1.96'], Shower: ['1.22', '1.79']};
+    console.log(query.brushed);
+    return Promise.resolve(JSON.parse(query.brushed));
 };
 
+
+const getStudentIdList = function(data){
+    let studentList = [];
+    let start,end;
+    if(Array.isArray(data['Meal'])){
+        start = parseFloat(data['Meal'][0]);
+        end = parseFloat(data['Meal'][1]);
+        studentList = studentList.concat(getStudentList(mealEntropyDistributionStudentId,start,end))
+    }
+    if(Array.isArray(data['Shower'])){
+        start = parseFloat(data['Shower'][0]);
+        end = parseFloat(data['Shower'][1]);
+        studentList = studentList.concat(getStudentList(showerEntropyDistributionStudentId,start,end))
+    }
+    result = studentList;
+    return  Promise.resolve(studentList);
+};
 /**
- * 根据数据来生成查询的SQL
+ * 根据给定的dataset，选取start到end之间的数值的list
+ * @param dataset
+ * @param start
+ * @param end
+ * @returns {Array}
  */
-const generateSQLForMeal = function () {
+const getStudentList = function(dataset,start,end){
+    let studentList = [];
+    let data;
 
-    const sql = `select student_id,ae1s,ae2s,ae3s,ae4s,ae5s,ae6s from meal_times;`;
-    return Promise.resolve(sql);
-};
-
-const storeMealData = function (mealData) {
-    dataFromDatabaseStorage.meal = mealData;
-    return Promise.resolve('done');
-};
-
-/**
- *
- */
-const generateSQLForShower = function () {
-
-    const sql = `select student_id,ae1s,ae2s,ae3s,ae4s,ae5s,ae6s from shower_times;`;
-    return Promise.resolve(sql);
-};
-
-/**
- * 需要把数据处理成需要的样子;
- * @param showerData
- * @returns {Promise.<T>}
- */
-const dataProcess = function (showerData) {
-    dataFromDatabaseStorage.shower = showerData;
-    return Promise.resolve(dataFromDatabaseStorage);
-};
-
-
-/**
- * 计算kde
- */
-const calKDE = function () {
-
-
-    const kdeArray = [];
-
-    Object.keys(dataFromDatabaseStorage).forEach(function (type) {
-        dataFromDatabaseStorage[type].forEach(function (student) {
-            Object.keys(student).forEach(function (eachEntropy) {
-                if (eachEntropy !== 'student_id' && student[eachEntropy] > 0) {
-                    kdeArray.push(student[eachEntropy])
-                }
-            })
-        });
-
-        returnDataStun[type]['entropyKDE'] = kde(kdeArray)
-    });
-
-    return Promise.resolve();
-
+    for(let i = start * 100; i<end *100 ; i++){
+        data = dataset[i/100];
+        if(data!= null){
+            if(i === 69 && data.split(',').length === 1911){
+                continue;
+            }
+            studentList = studentList.concat(data.split(','));
+        }else{
+            studentList = studentList.concat([]);
+        }
+    }
+    return Array.from(new Set(studentList))
 };
 
 

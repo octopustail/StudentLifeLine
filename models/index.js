@@ -12,6 +12,7 @@ module.exports = function (sql, res, rej) {
     });
 
     p.then((result) => {
+
         res(result);
     }, (error) => {
         rej(error);

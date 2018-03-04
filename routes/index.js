@@ -24,6 +24,8 @@ module.exports = function (app) {
     // 获得学生的成绩数据;
     app.get('/parallelgap',require('./parallelgap.js'));
 
+    app.get('/entropyDistributionBrush',require('./entropyDistributionBrush'));
+
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {
         const err = new Error('Not Found');

@@ -15,6 +15,7 @@ const queryInDatabase = function (sql) {
     });
 
     return p.then(function (data) {
+
         return Promise.resolve(data)
     },function (error) {
         Promise.reject(error);

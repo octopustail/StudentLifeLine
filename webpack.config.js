@@ -21,7 +21,8 @@ module.exports = {
             "/parallelgap": "http://localhost:3000",
             "/entropydistribution": "http://localhost:3000",
             "/calendardayforentropy": "http://localhost:3000",
-            "/calendardayfordistinctstudentid": "http://localhost:3000"
+            "/calendardayfordistinctstudentid": "http://localhost:3000",
+            "/entropyDistributionBrush":"http://localhost:3000"
         }
     },
     module: {

@@ -34,7 +34,6 @@ const queryVerify = function (query) {
  * 根据数据来生成查询的SQL
  */
 const generateSQL = function (query) {
-    console.log(query);
     const dateWhereClause = '("' + query.dates.split(',').join('","') + '")';
     let sql = `select distinct student_id from Student_Consumption where (date in ${dateWhereClause})`;
 

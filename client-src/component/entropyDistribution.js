@@ -8,6 +8,7 @@ const entropyDistributionInstance = echarts.init(document.getElementById('entrop
 let option;
 const loadingOption = config.loading;
 const FIXEDNUMBER = 2;
+let selectSection = null;
 
 import entropyKDE from './../mockdata/entropyKDE';
 
@@ -207,9 +208,10 @@ export function reloadData() {
         }
     };
 
-    bindInstanceWithBrush();
     changeLegendEvents();
     addAPatchOnTheUnwantedLegend();
+    bindInstanceWithBrush();
+
 
     entropyDistributionInstance.setOption(option);
     entropyDistributionInstance.hideLoading();
@@ -266,13 +268,52 @@ export function highlightByOrder(data) {
 }
 
 /**
+ * 获得entropy的范围
+ * @param dataIndex
+ * @param xAxis
+ */
+const getEntropyRange = function(dataIndex,xAxis){
+    return [xAxis[dataIndex[0]],xAxis[dataIndex[dataIndex.length-1]]]
+};
+
+
+/**
  * 绑定brush events
  */
 const bindInstanceWithBrush = function () {
     entropyDistributionInstance.on('brushSelected', function (e) {
-        console.log(e);
+        selectSection = e.batch[0].selected
+    });
+    $('#entropy-distribution-search').click(function () {
+        let selectedSearchObj = {};
+        if (selectSection == null || !selectSection.length) {
+            return null;
+        }
+        selectSection.forEach(function(select){
+            let xAxis;
+            if(select.seriesName === 'Meal Bar'){
+                xAxis = xAxisForMeal
+            }else{
+                xAxis = xAxisForShower
+
+            }
+            if(select.dataIndex.length === 0){
+                return null;
+            }
+            selectedSearchObj[select.seriesName.split(' ')[0]] = getEntropyRange(select.dataIndex,xAxis)
+        });
+
+        const param = encodeURIComponent(JSON.stringify(selectedSearchObj));
+        $.ajax({
+            url: `/entropyDistributionBrush?brushed=${param}`
+        }).done(function (data) {
+            console.log(data);
+        });
+
+
     })
 };
+
 
 /**
  * 绑定点击legend事件；

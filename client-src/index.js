@@ -8,6 +8,7 @@ import {init as dailyEntropyViewInit, reloadData as dailyEntropyViewReloadData} 
 
 import {init as selectConditionInit} from './component/selectCondition';
 import {init as selectStudentInfoTableInit} from './component/selectStudentInfoTable';
+import {init as queryWithStudentInputInit} from './component/queryWithStudentInput';
 
 import progressToggle from './component/progressHandler';
 
@@ -20,6 +21,7 @@ function init() {
     entropyInit();
     calendarInit();
     selectStudentInfoTableInit();
+    queryWithStudentInputInit();
 
     setTimeout(()=>{
         progressToggle('close');
