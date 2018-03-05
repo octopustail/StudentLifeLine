@@ -3,6 +3,8 @@ import config from '../config';
 import $ from 'jquery';
 
 import progressToggle from './progressHandler';
+import {queryServerWithTerm} from './calendarView';
+
 
 const entropyDistributionInstance = echarts.init(document.getElementById('entropy-distribution'));
 let option;
@@ -257,7 +259,6 @@ function highlightData(orderArray) {
  */
 export function highlightByOrder(data) {
 
-    debugger;
 
     highlightData({
         meal: {
@@ -307,9 +308,8 @@ const bindInstanceWithBrush = function () {
         $.ajax({
             url: `/entropyDistributionBrush?brushed=${param}`
         }).done(function (data) {
-            console.log(data);
+            queryServerWithTerm(data.toString());
         });
-
 
     })
 };

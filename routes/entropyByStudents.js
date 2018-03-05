@@ -38,7 +38,7 @@ const queryVerify = function (query) {
 
     // 保存到全局变量中
     queryForTemp = {
-        studentId:query.studentId
+        studentid:query.studentid
     };
     return Promise.resolve(queryForTemp);
 };
@@ -48,7 +48,7 @@ const queryVerify = function (query) {
  */
 const generateSQLForMeal = function (query) {
 
-    const StudentIdWhereClause = '("' + query.studentId.split(',').join('","') + '")';
+    const StudentIdWhereClause = '("' + query.studentid.split(',').join('","') + '")';
     //select student_id,date,time,type,cost from Student_Consumption where date in ("2010-02-01","2010-03-04");
     const sql = `select student_id,ae1s,ae2s,ae3s,ae4s,ae5s,ae6s from meal_times where student_id in ${StudentIdWhereClause};`;
 
@@ -65,7 +65,7 @@ const storeMealData = function (mealData) {
  */
 const generateSQLForShower = function () {
 
-    const StudentIdWhereClause = '("' + queryForTemp.studentId.split(',').join('","') + '")';
+    const StudentIdWhereClause = '("' + queryForTemp.studentid.split(',').join('","') + '")';
     //select student_id,date,time,type,cost from Student_Consumption where date in ("2010-02-01","2010-03-04");
 
     const sql = `select student_id,ae1s,ae2s,ae3s,ae4s,ae5s,ae6s from shower_times where student_id in ${StudentIdWhereClause};`;

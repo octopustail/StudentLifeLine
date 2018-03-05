@@ -119,16 +119,30 @@ const needChatWithServer = function () {
  * 根据选的 term 查询数据库
  * @param activeTerm
  */
-const queryServerWithTerm = function () {
+export const queryServerWithTerm = function (studentIdList) {
     const year = activeTerm.split('-')[0];
     const term = activeTerm.split('-')[1];
+    let url = `/calendar?year=${year}&term=${term}`;
+    if (studentIdList != null) {
+        progressToggle('open');
+
+        //需要同步学生学号数据
+        model['studentIdList'] = studentIdList;
+
+        url += `&studentid=${studentIdList}`;
+    }
     $.ajax({
-        url: `/calendar?year=${year}&term=${term}`,
+        url,
     }).done(function (data) {
+        if (studentIdList != null) {
+            progressToggle('close');
+
+        }
         model[activeTerm] = data;
         calendarView(activeTab, activeTerm);
     })
 };
+
 
 /**
  * 在切换的时候,把上次选中的selectedDate清空
@@ -286,6 +300,24 @@ const calendarClickBind = function () {
     });
 };
 
+const updateParallelView = function (distinctStudentId) {
+    $.ajax({
+        url: `/parallelgap?studentid=${distinctStudentId}`
+    }).done(function (data) {
+        parcoods.parcoodsGap.init(data);
+        progressToggle('close');
+    });
+
+    $.ajax({
+        url: `/entropybystudents?studentid=${distinctStudentId}`
+    }).done(function (data) {
+        parcoods.parcoodsEntropy.init(data.meal);
+        //@TODO 完善;
+        getSelectedData();
+        progressToggle('close');
+    });
+}
+
 const calendarSearchBtnClickBind = function () {
     const calendarBtn = $('#calendar-search');
 
@@ -301,11 +333,17 @@ const calendarSearchBtnClickBind = function () {
 
         // 记录选中的天数;
         selectConditionInitClear('dates');
-        selectConditionInitStore('dates',selectedDate.split(','));
+        selectConditionInitStore('dates', selectedDate.split(','));
 
         progressToggle('open');
+
+        let url = `/calendarday?dates=${selectedDate}`;
+        debugger
+        if (model['studentIdList'] !=null) {
+            url += `&studentid=${model['studentIdList']}`
+        }
         $.ajax({
-            url: `/calendarday?dates=${selectedDate}`
+            url
         }).done(function (data) {
             dailyEntropyViewReloadData(data);
             progressToggle('close');
@@ -314,29 +352,19 @@ const calendarSearchBtnClickBind = function () {
         //开了2个ajax所以有2个缓存进度;
         progressToggle('open');
         progressToggle('open');
-        $.ajax({
-            url: `/calendardayfordistinctstudentid?dates=${selectedDate}&location=${activeTab}`
-        }).done(function (data) {
-            // 这是选中的天数的学生列表合集;
-            const distinctStudentId = data.toString();
 
+        if (model['studentIdList']) {
+            updateParallelView(model['studentIdList'])
+
+        } else {
             $.ajax({
-                url: `/parallelgap?studentid=${distinctStudentId}`
+                url: `/calendardayfordistinctstudentid?dates=${selectedDate}&location=${activeTab}`
             }).done(function (data) {
-                parcoods.parcoodsGap.init(data);
-                progressToggle('close');
+                // 这是选中的天数的学生列表合集;
+                const distinctStudentId = data.toString();
+                updateParallelView(distinctStudentId)
             });
-
-            $.ajax({
-                url: `/entropybystudents?studentId=${distinctStudentId}`
-            }).done(function (data) {
-                parcoods.parcoodsEntropy.init(data.meal);
-                //@TODO 完善;
-                getSelectedData();
-                progressToggle('close');
-            });
-
-        });
+        }
 
 
     })

@@ -197,7 +197,6 @@ const highlightParcoods = function(studentIdArray){
 const highlightEntropyDistribution= function(studentIdArray){
     const entropyData = findHighlightDataArray(studentIdArray,window.parcoods.data.entropy);
 
-    debugger;
     let entropyArray = [];
 
     entropyData.forEach(function(student){

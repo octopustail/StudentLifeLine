@@ -36,9 +36,7 @@ const dataProcess = function(data){
             }
             aeObject[aeValue].push(studentInfo['student_id'])
         });
-        if(index === 1000){
-            console.log('studentInfo',studentInfo)
-        }
+
     });
     Object.keys(aeObject).forEach(function (aeKey) {
         aeObject[aeKey] = Array.from(new Set(aeObject[aeKey])).toString();

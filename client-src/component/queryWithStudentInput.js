@@ -1,5 +1,5 @@
 import $ from 'jquery';
-
+import {queryServerWithTerm} from './calendarView';
 const init = function(){
     bindClickBtn();
 };
@@ -12,9 +12,7 @@ const bindClickBtn = function(){
         if(!value){
             return null
         }
-
-        $.ajax('./')
-
+        queryServerWithTerm(value);
     })
 
 };

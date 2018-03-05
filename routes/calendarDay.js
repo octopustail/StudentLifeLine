@@ -28,8 +28,10 @@ const calendarDataProcess = function (req, res, next) {
  */
 const queryVerify = function (query) {
     //只会传认可的白名单数据;
+
     return Promise.resolve({
-        dates: query.dates
+        dates: query.dates,
+        studentid:query.studentid
     });
 };
 
@@ -39,7 +41,12 @@ const queryVerify = function (query) {
 const generateSQL = function (query) {
     const dateWhereClause = '("' + query.dates.split(',').join('","') + '")';
     //select student_id,date,time,type,cost from Student_Consumption where date in ("2010-02-01","2010-03-04");
-    const sql = `select student_id,date,time,type,cost from Student_Consumption where date in ${dateWhereClause};`;
+    let sql = `select student_id,date,time,type,cost from Student_Consumption where date in ${dateWhereClause}`;
+    if(query.studentid){
+        const studentWhereClause = '("' + query.studentid.split(',').join('","') + '")';
+        sql+= ` and student_id in ${studentWhereClause}`
+    }
+    sql+=';';
     return Promise.resolve(sql);
 };
 
@@ -56,7 +63,6 @@ const dataProcess = function (data) {
     const countData = dispatchCountData(resultDataStructure);
     const countDataWithoutZeroForKDE = processCountDataWithoutZeroForKDE(countData);
     storeMinuteMapDictToGlobal(resultDataStructure);
-
     return Promise.resolve(countDataWithoutZeroForKDE);
 };
 
@@ -186,7 +192,6 @@ const calKDE = function (countData) {
     Object.keys(countData).forEach(function (type) {
         result[type] = kde(countData[type]);
     });
-
     return Promise.resolve(result)
 };
 
@@ -231,7 +236,6 @@ const kdeDataProcess = function (kdeArray) {
         resultObject[type]['countArray'] =  minuteMapDictForTempStore[type]['countArray'];
         resultObject[type]['kdeObject']  = kdeArray[type];
     });
-
     return Promise.resolve(resultObject);
 
 };

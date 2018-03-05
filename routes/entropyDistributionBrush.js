@@ -27,7 +27,6 @@ const entropyDistributionDataProcess = function (req, res, next) {
 const queryVerify = function (query) {
     //只会传认可的白名单数据;
     // const query.brushed = {Meal: ['1.43', '1.96'], Shower: ['1.22', '1.79']};
-    console.log(query.brushed);
     return Promise.resolve(JSON.parse(query.brushed));
 };
 

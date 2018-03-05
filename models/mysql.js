@@ -8,17 +8,17 @@ const config = require('../configs/default.js');
  * @param reject
  */
 module.exports = function (sql, resolve, reject) {
-  /**
-   * login in with default config;
-   */
-  const connection = mysql.createConnection(config.mysql);
-  connection.connect();
-  connection.query(sql, function (error, results, fields) {
-    if (error) {
-      reject(error);
-      throw error;
-    }
+    /**
+     * login in with default config;
+     */
+    const connection = mysql.createConnection(config.mysql);
+    connection.connect();
+    connection.query(sql, function (error, results, fields) {
+        if (error) {
+            reject(error);
+            throw error;
+        }
+        resolve(results);
+    });
     connection.end();
-    resolve(results);
-  });
 };
