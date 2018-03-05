@@ -6,12 +6,13 @@ const queryInDatabase = require('./../controllers/queryInDatabase');
 const kde = require('./../controllers/kernelDensityEstimation');
 
 let minuteMapDictForTempStore = require('./../models/minuteMapDict');
+let resultData;
 
 const calendarDataProcess = function (req, res, next) {
-    const queryProcessClain = new DataProcesClain(req.query);
-
-    const sendToClientHandler = function (data) {
-        res.send(data);
+    const queryProcessClain = new DataProcesClain(req.body);
+    debugger;
+    const sendToClientHandler = function () {
+        res.send(resultData);
         res.end();
         return Promise.resolve();
     };
@@ -26,24 +27,24 @@ const calendarDataProcess = function (req, res, next) {
  * 只会传输认同的数据;
  * @param query
  */
-const queryVerify = function (query) {
+const queryVerify = function (data) {
     //只会传认可的白名单数据;
-
+    debugger
     return Promise.resolve({
-        dates: query.dates,
-        studentid:query.studentid
+        dates: data.dates,
+        studentid:data.studentid
     });
 };
 
 /**
  * 根据数据来生成查询的SQL
  */
-const generateSQL = function (query) {
-    const dateWhereClause = '("' + query.dates.split(',').join('","') + '")';
+const generateSQL = function (data) {
+    const dateWhereClause = '("' + data.dates.split(',').join('","') + '")';
     //select student_id,date,time,type,cost from Student_Consumption where date in ("2010-02-01","2010-03-04");
     let sql = `select student_id,date,time,type,cost from Student_Consumption where date in ${dateWhereClause}`;
-    if(query.studentid){
-        const studentWhereClause = '("' + query.studentid.split(',').join('","') + '")';
+    if(data.studentid){
+        const studentWhereClause = '("' + data.studentid.split(',').join('","') + '")';
         sql+= ` and student_id in ${studentWhereClause}`
     }
     sql+=';';
@@ -236,6 +237,7 @@ const kdeDataProcess = function (kdeArray) {
         resultObject[type]['countArray'] =  minuteMapDictForTempStore[type]['countArray'];
         resultObject[type]['kdeObject']  = kdeArray[type];
     });
+    resultData = resultObject;
     return Promise.resolve(resultObject);
 
 };

@@ -8,7 +8,7 @@ const queryInDatabase = require('./../controllers/queryInDatabase');
 
 
 const calendarDataProcess = function (req, res, next) {
-    const queryProcessClain = new DataProcesClain(req.query);
+    const queryProcessClain = new DataProcesClain(req.body);
 
 
     const sendToClientHandler = function (data) {
@@ -26,9 +26,8 @@ const calendarDataProcess = function (req, res, next) {
  * 根据 query 传入的 year & term &StudentId来去定是多少时间范围内的数据
  * @param query
  */
-const queryByTerm = function (query) {
-
-    const key = (query.year || config.calendar.defaultYear) + '-' + (query.term || config.calendar.defaultTerm);
+const queryByTerm = function (data) {
+    const key = (data.year || config.calendar.defaultYear) + '-' + (data.term || config.calendar.defaultTerm);
     const dateSection = config.dateSection[key];
 
     const param = {
@@ -36,8 +35,8 @@ const queryByTerm = function (query) {
         end: dateSection.end
     };
 
-    if (query.studentid != null) {
-        param['studentid'] = query.studentid.split(',');
+    if (data.studentid != null) {
+        param['studentid'] = data.studentid.split(',');
     }
 
     return Promise.resolve(param)
@@ -132,7 +131,6 @@ const queryInDatabaseOptional = function (result) {
 
 
     return queryInDatabase(result.sql).then(function (data) {
-        console.log(data);
 
         return Promise.resolve({
             fullKeys: result.fullKeys,
@@ -179,7 +177,7 @@ const dateProcessForStudentId = function (result) {
             }
 
         });
-    })
+    });
 
     return countObject;
 

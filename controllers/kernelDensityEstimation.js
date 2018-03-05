@@ -13,10 +13,14 @@ const kernelDensityEstinmation = function (data, steps = 300) {
 
     const result = {};
 
-    const stepLength = (xDomainMax - xDomainMin) / steps;
+    let stepLength = (xDomainMax - xDomainMin) / steps;
+    if(stepLength === 0){
+        stepLength = 1;
+    }
     const kdfit = new KDE.KDEDist(KDE.Kernel.Gaussian, data);
 
     let x = xDomainMin, y;
+
 
 
     for (; x <= xDomainMax; x+=stepLength) {

@@ -122,23 +122,27 @@ const needChatWithServer = function () {
 export const queryServerWithTerm = function (studentIdList) {
     const year = activeTerm.split('-')[0];
     const term = activeTerm.split('-')[1];
-    let url = `/calendar?year=${year}&term=${term}`;
+    let url = `/calendar`;
+    const data = {
+        year,
+        term,
+    };
     if (studentIdList != null) {
         progressToggle('open');
 
         //需要同步学生学号数据
         model['studentIdList'] = studentIdList;
-
-        url += `&studentid=${studentIdList}`;
+        data['studentid'] = studentIdList
     }
     $.ajax({
         url,
-    }).done(function (data) {
+        type: 'POST',
+        data
+    }).done(function (returnData) {
         if (studentIdList != null) {
             progressToggle('close');
-
         }
-        model[activeTerm] = data;
+        model[activeTerm] = returnData;
         calendarView(activeTab, activeTerm);
     })
 };
@@ -336,16 +340,21 @@ const calendarSearchBtnClickBind = function () {
         selectConditionInitStore('dates', selectedDate.split(','));
 
         progressToggle('open');
+        const data = {};
+        let url = `/calendarday`;
+        data['dates'] = selectedDate;
 
-        let url = `/calendarday?dates=${selectedDate}`;
-        debugger
         if (model['studentIdList'] !=null) {
-            url += `&studentid=${model['studentIdList']}`
+            data['studentid'] = model['studentIdList']
         }
+
         $.ajax({
-            url
-        }).done(function (data) {
-            dailyEntropyViewReloadData(data);
+            url,
+            type:'POST',
+            data
+        }).done(function (returnData) {
+            console.log(returnData);
+            dailyEntropyViewReloadData(returnData);
             progressToggle('close');
         });
 

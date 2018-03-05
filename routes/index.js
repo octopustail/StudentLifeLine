@@ -5,7 +5,7 @@
 module.exports = function (app) {
 
     // 这里是来获得calendar view数据
-    app.get('/calendar',require('./calendar.js'));
+    app.post('/calendar',require('./calendar.js'));
 
     // 计算所有学生的kde
     app.get('/entropydistribution',require('./entropyDistribution'));
@@ -16,7 +16,7 @@ module.exports = function (app) {
     app.get('/data',require('./data.js'));
 
     // 点击calendar中的某一天获得次数
-    app.get('/calendarday',require('./calendarDay.js'));
+    app.post('/calendarday',require('./calendarDay.js'));
 
     // 根据选择的数据情况来选择distinct的学生id;
     app.get('/calendardayfordistinctstudentid',require('./calendardayForDistinctStudentId.js'));
