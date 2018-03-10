@@ -14,36 +14,54 @@
 
         storeDataInWindow(data);
         storeParcoordsInstanceInWindows(pc);
-        // const range = pc.height() - pc.margin().top - pc.margin().bottom;
-        // const log = d3.scale.linear()
-        //     .domain([0, 100])
-        //     .range([range, 1]);
-        // const dimensions = {
-        //     score_1s: {
-        //         yscale: log
-        //     },
-        //     score_2s: {
-        //         yscale: log
-        //     },
-        //     score_3s: {
-        //         yscale: log
-        //     },
-        //     score_4s: {
-        //         yscale: log
-        //     },
-        //     score_5s: {
-        //         yscale: log
-        //     },
-        //     score_6s: {
-        //         yscale: log
-        //     }
-        // };
+        const range = pc.height() - pc.margin().top - pc.margin().bottom;
+        const log = d3.scale.linear()
+            .domain([40, 100])
+            .range([range, 1]);
+        const dimensions = {
+            "score_1s": {
+                title: "Term1",
+                ticks:4,
+                yscale:log,
+                tickValue:[40,60,80,100]
+            },
+            "score_2s": {
+                title: "Term2",
+                ticks:4,
+                yscale:log,
+                tickValue:[40,60,80,100]
+            },
+            "score_3s": {
+                title: "Term3",
+                ticks:4,
+                yscale:log,
+                tickValue:[40,60,80,100]
+            },
+            "score_4s": {
+                title: "Term4",
+                ticks:4,
+                yscale:log,
+                tickValue:[40,60,80,100]
+            },
+            "score_5s": {
+                title: "Term5",
+                ticks:4,
+                yscale:log,
+                tickValue:[40,60,80,100]
+            },
+            "score_6s": {
+                title: "Term6",
+                ticks:4,
+                yscale:log,
+                tickValue:[40,60,80,100]
+            },
+        };
 
         pc.data(data)
             .bundlingStrength(2) // set bundling strength
             .smoothness(.25)
-            .bundleDimension("score_3s")
-            // .dimensions(dimensions)
+            .dimensions(dimensions)
+            // .bundleDimension("score_1s")
             .hideAxis(["student_id"])
             .showControlPoints(false)
             .composite('lighter')

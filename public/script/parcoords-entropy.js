@@ -13,10 +13,53 @@
         const pc = d3.parcoords()("#parcoord-entropy");
         storeDataInWindow(data);
         storeParcoordsInstanceInWindows(pc);
+        const range = pc.height() - pc.margin().top - pc.margin().bottom;
+        const log = d3.scale.linear()
+            .domain([1, 2.5])
+            .range([range, 1]);
+        const dimensions = {
+            "ae1s": {
+                title: "AE_Term1",
+                ticks:4,
+                yscale:log,
+                tickValue:[2.5,2,1.5,1]
+            },
+            "ae2s": {
+                title: "AE_Term2",
+                ticks:4,
+                yscale:log,
+                tickValue:[2.5,2,1.5,1]
+            },
+            "ae3s": {
+                title: "AE_Term3",
+                ticks:4,
+                yscale:log,
+                tickValue:[2.5,2,1.5,1]
+            },
+            "ae4s": {
+                title: "AE_Term4",
+                ticks:4,
+                yscale:log,
+                tickValue:[2.5,2,1.5,1]
+            },
+            "ae5s": {
+                title: "AE_Term5",
+                ticks:4,
+                yscale:log,
+                tickValue:[2.5,2,1.5,1]
+            },
+            "ae6s": {
+                title: "AE_Term6",
+                ticks:4,
+                yscale:log,
+                tickValue:[2.5,2,1.5,1]
+            },
+        };
 
         pc.data(data)
             .bundlingStrength(2) // set bundling strength
             .smoothness(.25)
+            .dimensions(dimensions)
             .bundleDimension("ae3s")
             .hideAxis(["student_id"])
             .showControlPoints(false)
