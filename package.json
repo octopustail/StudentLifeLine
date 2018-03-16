@@ -24,14 +24,14 @@
     "echarts": "^3.8.5",
     "ejs": "^2.5.7",
     "expose-loader": "^0.7.4",
-    "express": "~4.15.5",
+    "express": "^4.15.5",
     "file-loader": "^1.1.6",
     "jade": "~1.11.0",
     "jquery": "^3.2.1",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "moment": "^2.20.1",
-    "morga  n": "~1.9.0",
+    "morgan": "~1.9.0",
     "mysql": "^2.15.0",
     "node-sass": "^4.7.2",
     "normalize.css": "^7.0.0",
@@ -39,7 +39,9 @@
     "sass-loader": "^6.0.6",
     "serve-favicon": "~2.4.5",
     "style-loader": "^0.19.1",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.0"
+    "webpack-dev-server": "^2.11.1"
+  },
+  "devDependencies": {
+    "webpack": "^3.11.0"
   }
 }

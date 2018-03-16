@@ -7,9 +7,14 @@ import $ from 'jquery';
  * @returns {{}}
  */
 
-//保存选中的checkbox的studentid
+//保存选中的checkbox的studentid 数组
 let selectedStudentId = [];
 let isSelectedAll = false;
+// //字符串 保存选中的学生id数组转化成的字符串
+// let selectedList;
+// //数组 保存input中的*处理之后的id
+// let selectedListforInput = [];
+
 
 const combineData = function (datasetA, datasetB) {
 
@@ -58,10 +63,11 @@ const getSelectedData = function (gapData = window.parcoods.data.gap, entropyDat
 
     const dataset = combineData(gapData, entropyData);
     clearCurrentTable();
+    selectCheckbox();
     generateTableDOM(dataset, Object.keys(dataset));
 
     sortTableDOM(dataset);
-    selectCheckbox();
+
 
 };
 
@@ -128,13 +134,65 @@ const generateTableDOM = function (dataset, sortedStudentIdArray) {
         </table>`);
 
     document.getElementById('selected-student-info').appendChild($html[$html.length - 1])
+    //为每个student_id DOM节点增加studentid属性
+    addStudentAttr();
+    //保持生成的表格中checkbox的状态
+    selectedStudentId = studentidStayChecked(sortedStudentIdArray, selectedStudentId);
+    //在搜索框中同步selectedStudentid
+    selectedIdtoFormconctrl(selectedStudentId)
+};
+/**
+ * 将选择的id同步到搜索框 .form-control 中
+ */
+const selectedIdtoFormconctrl = function (selectedId) {
+    //用于保存替换*之后的学号
+    let selectedListforInput;
+    selectedListforInput = repalceStaredId(selectedId);
 
-    if(isSelectedAll == true){
-        $('.all-checked').prop("checked",true);
-    }else{
-        $('.all-checked').prop("checked",false);
+    $('.form-control ').attr('value', selectedListforInput);
+    return selectedId;
+
+};
+/**
+ * 用于将为学号加*
+ *parameter:数组 selectedidlist 或者第一列td的值 所在的数组
+ *  返回 ：字符串 加完*的学号字符串
+ */
+const repalceStaredId = function (idArray) {
+    let studentidtext = [];
+    console.log('idArray', idArray);
+    //判断学生id格式 对应将其班级位数替换成*号
+    for (let i = 0; i < idArray.length; i++) {
+        let studentIdHead = idArray[i].indexOf('29');
+
+
+        if (studentIdHead == 0) {
+            studentidtext[i] = idArray[i].replace(/(\d{6})\d{2}(\d{2})/, '$1**$2');
+
+        } else {
+            studentidtext[i] = idArray[i].replace(/(\d{8})\d{2}(\d{3})/, '$1**$2');
+        }
+
     }
+    studentidtext.toString();
+    return studentidtext;
+};
+/**
+ * 为学号列添加自定义属性 studentid
+ */
 
+const addStudentAttr = function () {
+    $('tbody tr').each(function () {
+        let text = []
+        text[0] = $(this).children("td:nth-child(2)").text();
+        let $studentidTd = $(this).children("td:nth-child(2)");
+        let studentidtext;
+        $studentidTd.attr('studentid', text);
+
+        studentidtext = repalceStaredId(text);
+
+        $studentidTd.text(studentidtext);
+    })
 };
 
 /**
@@ -177,76 +235,102 @@ const sortTableDOM = function (dataset, sortedStudentIdArray = Object.keys(datas
         flag = !flag;
         generateTableDOM(dataset, sortedIdArray);
 
-        //排序表格后依然保持checked状态
-        for (let i = 0; i < sortedStudentIdArray.length; i++) {
-            for (let j = 0; j < selectedStudentId.length; j++)
-                if (sortedStudentIdArray[i] === selectedStudentId[j]) {
-                    $(`td:contains(${selectedStudentId[j]})`).prev().children().prop('checked', true);
-
-                }
-        }
-
-        if(isSelectedAll == true){
-            $('.all-checked').prop("checked",true);
-        }else{
-            $('.all-checked').prop("checked",false);
-        }
-
 
     })
 };
+/**
+ * 保持在筛选过后checked的id依然保持checked状态
+ * tableArr: 表格中展示的arry selectArr：之前选中的array
+ */
 
+const studentidStayChecked = function (tableArr, selectArr) {
+    // 保存tableArr selectArr的公共部分作为新的selectedStudentId[]
+    let IdArrUnion = []
+    for (let i = 0; i < tableArr.length; i++) {
+
+        for (let j = 0; j < selectArr.length; j++) {
+            if (tableArr[i] === selectArr[j]) {
+                $(`td[studentid = ${selectArr[j]}]`).prev().children().prop('checked', true);
+                IdArrUnion.push(selectArr[j])
+            }
+        }
+    }
+    return IdArrUnion;
+
+
+};
+
+/**
+ * checked的学生 保存在selectedStudentId[]中
+ */
 const selectCheckbox = function () {
 
     $('#selected-student-info').on('click', '.checkstudents', function (e) {
+        //在全选状态下如果点击了checkbox 应该取消全选
+        if (isSelectedAll == true) {
+            $('.all-checked').prop("checked", false);
+        }
         let target = e.target;
         let ischeck = $(this).prop("checked");
-        let selectedList = [];
+        let $studentid = $(target).parent().next();
 
-        let $studentid = $(target).parent().next().text();
+        //studentidAttr:保存学生真实id
+        let studentidAttr = $studentid.attr('studentid');
 
-        if (ischeck == true) {
+        //idgot:$studentid是否已在selectedStudentId中 防止重复添加id
+        let idgot = selectedStudentId.indexOf(studentidAttr);
 
-            selectedStudentId.push($studentid);
+        if (ischeck == true && idgot == -1) {
+            selectedStudentId.push(studentidAttr);
 
-        } else {
-
-            removeByValue(selectedStudentId, $studentid);
+        } else if (ischeck == false) {
+            removeByValue(selectedStudentId, studentidAttr);
 
         }
 
         //保存选中的学生id
-        selectedList = selectedStudentId.toString();
 
-        $('.form-control ').attr('value', selectedList);
+        selectedIdtoFormconctrl(selectedStudentId);
+
 
     });
+    /*
+    * 修改多次筛选会重复将值放入inselectedStudentId的bug
+    * solution：判断该值是否在inselectedStudentId中
+    * 不知道为什么多次筛选函数会执行多次
+    * */
+    $('#selected-student-info').on('click', '.all-checked', function () {
+        isSelectedAll = $(this).prop("checked");
 
-    $('#selected-student-info').on('click','.all-checked',function () {
-            isSelectedAll = $(this).prop("checked");
-        let selectedList = [];
-        if(isSelectedAll == true){
+        if (isSelectedAll == true) {
             $("tbody tr").each(function () {
 
-                $(this).children("td:nth-child(1)").children().prop('checked',true)
-                let text = $(this).children("td:nth-child(2)").text();
-                selectedStudentId.push(text);
-                selectedList = selectedStudentId.toString();
+                $(this).children("td:nth-child(1)").children().prop('checked', true)
+                ;
+                let $studentid = $(this).children("td:nth-child(2)");
+                let studentidAttr = $studentid.attr('studentid');
+
+                let inselectedStudentId = selectedStudentId.indexOf(studentidAttr);
+                if (inselectedStudentId == -1) {
+                    selectedStudentId.push(studentidAttr);
+
+
+                }
 
 
             });
-            $('.form-control ').attr('placeholder', selectedList);
-        }else{
+        } else {
+
             $("tbody tr").each(function () {
                 $(this).children("td:nth-child(1)").children().prop('checked', false)
 
             });
-            $('.form-control ').attr('placeholder', 'Query With StudentId');
             selectedStudentId = [];
         }
-    })
+        selectedIdtoFormconctrl(selectedStudentId);
 
-}
+    });
+};
 /**
  * 实现从数组中删除某个值
  */

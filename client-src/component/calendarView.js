@@ -293,6 +293,10 @@ const calendarClickBind = function () {
             selectModel.splice(selectDateIndex, 1);
         }
 
+        let temp ;
+        $('.form-control ').attr('value', '');
+        temp = $('.form-control ').attr('value');
+        console.log('.form-control',temp);
         calendarViewInstance.setOption({
             series: [{
                 name: 'selected date',
