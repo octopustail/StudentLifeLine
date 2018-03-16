@@ -37,7 +37,6 @@ export function init() {
     dropdownMenuClickBind();
     queryServerWithTerm();
     progressToggle('close');
-
 }
 
 /**
@@ -74,10 +73,13 @@ const ulClickBind = function () {
             $ulElement.find('.dropdown-menu').toggle('normal');
         }
 
+
+
     };
 
     $ulElement.click(function (element) {
         uiChangeBinding(element);
+        $('#select-all-date')[0].checked = false
     });
 };
 
@@ -88,8 +90,15 @@ const dropdownMenuClickBind = function () {
     const $dropdownMenu = $('.dropdown-menu');
 
     $dropdownMenu.click(function (element) {
+        const studentList = $('#inputSmall')[0].value;
+
         const clickedElementInnerText = element.target.innerText;
         activeTerm = clickedElementInnerText.split(' ')[0] + '-' + clickedElementInnerText.split(' ')[1][0];
+
+        if (studentList) {
+            activeTerm += '-' + studentList;
+        }
+
 
         $('.dropdown-toggle')[0].innerHTML = clickedElementInnerText + '<span class="caret"></span>'
         $dropdownMenu.find('.active').removeClass('active');
@@ -101,7 +110,7 @@ const dropdownMenuClickBind = function () {
             // 如果需要从服务器获取数据，先打开 progress 等待；
             queryServerWithTerm();
         } else {
-            calendarView(activeTab, activeTerm);
+            calendarView();
         }
     });
 
@@ -112,6 +121,7 @@ const dropdownMenuClickBind = function () {
  * @returns {boolean}
  */
 const needChatWithServer = function () {
+
     return model[activeTerm] == null
 };
 
@@ -122,6 +132,9 @@ const needChatWithServer = function () {
 export const queryServerWithTerm = function (studentIdList) {
     const year = activeTerm.split('-')[0];
     const term = activeTerm.split('-')[1];
+    if(!studentIdList){
+        studentIdList = activeTerm.split('-')[2]
+    }
     let url = `/calendar`;
     const data = {
         year,
@@ -156,6 +169,8 @@ const clearChosenData = function () {
 };
 
 const calendarView = function () {
+    debugger
+
     const fullKeys = model[activeTerm]['fullKeys'];
     const locationArray = model[activeTerm]['countObject'][activeTab];
     const data = [];
@@ -166,6 +181,7 @@ const calendarView = function () {
     });
 
     clearChosenData();
+
 
     const option = {
         backgroundColor: config.defaultColor.cardColor,
@@ -254,7 +270,9 @@ const calendarView = function () {
                 coordinateSystem: 'calendar',
                 data: data.sort((a, b) => {
                     return b[1] - a[1];
-                }).slice(1, 10),
+                }).slice(0, 10).filter(function (value) {
+                    return value[1] !== 0
+                }),
                 showEffectOn: 'render',
                 rippleEffect: {
                     brushType: 'fill',
@@ -280,33 +298,41 @@ const calendarView = function () {
 };
 
 const calendarClickBind = function () {
-    calendarViewInstance.on('click', function (element) {
-        const selectDate = element.data.toString();
 
+    const $checkboxForAllDateStatus = $('#select-all-date');
+
+    $checkboxForAllDateStatus.click(function () {
+        const status = $('#select-all-date')[0].checked;
+        selectAllDates(status);
+    });
+
+
+    calendarViewInstance.on('click', function (element) {
+
+        let data;
+        const selectDate = element.data.toString();
         const selectModel = model['selectedDate'];
         const selectDateIndex = selectModel.indexOf(selectDate);
-
         if (selectDateIndex === -1) {
             //说明这个数据是没有重复的
             selectModel.push(selectDate);
         } else {
             selectModel.splice(selectDateIndex, 1);
         }
+        data = model.selectedDate.map((val) => {
+            return val.split(',')
+        });
 
-        let temp ;
-        $('.form-control ').attr('value', '');
-        temp = $('.form-control ').attr('value');
-        console.log('.form-control',temp);
+
         calendarViewInstance.setOption({
             series: [{
                 name: 'selected date',
-                data: model.selectedDate.map((val) => {
-                    return val.split(',')
-                }),
+                data: data,
             }]
         });
     });
 };
+
 
 const updateParallelView = function (distinctStudentId) {
     $.ajax({
@@ -348,13 +374,13 @@ const calendarSearchBtnClickBind = function () {
         let url = `/calendarday`;
         data['dates'] = selectedDate;
 
-        if (model['studentIdList'] !=null) {
+        if (model['studentIdList'] != null) {
             data['studentid'] = model['studentIdList']
         }
 
         $.ajax({
             url,
-            type:'POST',
+            type: 'POST',
             data
         }).done(function (returnData) {
             console.log(returnData);
@@ -381,4 +407,36 @@ const calendarSearchBtnClickBind = function () {
 
 
     })
+};
+
+//选择日历中的有选项的每一天；
+const selectAllDates = function (status) {
+    if (status) {
+        const countObject = model[activeTerm]['countObject'][activeTab];
+        const fullKeys = model[activeTerm]['fullKeys'];
+
+        const selectedDate = [];
+        const data = [];
+
+        countObject.forEach(function (element, index) {
+            if (element !== 0) {
+                data.push([fullKeys[index], element])
+                selectedDate.push(fullKeys[index] + ',' + element)
+
+            }
+        });
+        model['selectedDate'] = selectedDate;
+        model['data'] = data;
+    } else {
+        model['selectedDate'] = [];
+        model['data'] = []
+    }
+
+    calendarViewInstance.setOption({
+        series: [{
+            name: 'selected date',
+            data: model['data'],
+        }]
+    });
+
 };
