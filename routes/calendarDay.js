@@ -10,7 +10,6 @@ let resultData;
 
 const calendarDataProcess = function (req, res, next) {
     const queryProcessClain = new DataProcesClain(req.body);
-    debugger;
     const sendToClientHandler = function () {
         res.send(resultData);
         res.end();

@@ -169,7 +169,6 @@ const clearChosenData = function () {
 };
 
 const calendarView = function () {
-    debugger
 
     const fullKeys = model[activeTerm]['fullKeys'];
     const locationArray = model[activeTerm]['countObject'][activeTab];
