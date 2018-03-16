@@ -26,7 +26,7 @@ module.exports = function (app) {
 
     app.get('/entropyDistributionBrush',require('./entropyDistributionBrush'));
 
-    app.get('/sql',require('./sql'));
+    // app.get('/sql',require('./sql'));
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {
         const err = new Error('Not Found');

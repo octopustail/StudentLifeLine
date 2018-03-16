@@ -262,7 +262,7 @@ export function highlightByOrder(data) {
 
     highlightData({
         meal: {
-            hiighlight: []
+            highlight: []
         },
         shower: {}
     })
