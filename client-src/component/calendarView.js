@@ -74,7 +74,6 @@ const ulClickBind = function () {
         }
 
 
-
     };
 
     $ulElement.click(function (element) {
@@ -132,7 +131,7 @@ const needChatWithServer = function () {
 export const queryServerWithTerm = function (studentIdList) {
     const year = activeTerm.split('-')[0];
     const term = activeTerm.split('-')[1];
-    if(!studentIdList){
+    if (!studentIdList) {
         studentIdList = activeTerm.split('-')[2]
     }
     let url = `/calendar`;
@@ -418,11 +417,10 @@ const selectAllDates = function (status) {
         const data = [];
 
         countObject.forEach(function (element, index) {
-            if (element !== 0) {
-                data.push([fullKeys[index], element])
-                selectedDate.push(fullKeys[index] + ',' + element)
-
-            }
+            // if (element !== 0) {
+            data.push([fullKeys[index], element])
+            selectedDate.push(fullKeys[index] + ',' + element)
+            // }
         });
         model['selectedDate'] = selectedDate;
         model['data'] = data;

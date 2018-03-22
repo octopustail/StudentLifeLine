@@ -9,7 +9,7 @@ const config = {
     mysql: {
         host: 'localhost',
         user: 'root',
-        password: 'visvisvis',
+        password: 'vis',
         // password: 'visvisvis',//我的笔记本中的数据库密码是这个
         database: 'StudentsCardData'
     },
