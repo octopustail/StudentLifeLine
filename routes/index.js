@@ -26,6 +26,8 @@ module.exports = function (app) {
 
     app.get('/entropyDistributionBrush',require('./entropyDistributionBrush'));
 
+    app.get('/queryWithStudentId',require('./queryWithStudentId'));
+
     // app.get('/sql',require('./sql'));
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {

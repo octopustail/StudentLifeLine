@@ -174,6 +174,7 @@ const calendarView = function () {
     const data = [];
     const max = Math.max(...locationArray);
 
+
     fullKeys.forEach(function (value, index) {
         data.push([value, locationArray[index]]);
     });
